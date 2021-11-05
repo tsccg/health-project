@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:el="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>el组件3</title>
+    <!-- 引入ElementUI样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <!-- 引入ElementUI组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+</head>
+<body>
+<div id="app">
+    <el-pagination
+            @current-change="handleCurrentChange"
+            :current-page="10"
+            :page-size="20"
+            layout="total, prev, pager, next, jumper"
+            :total="400">
+    </el-pagination>
+</div>
+
+<script>
+    new Vue({
+        el:'#app',
+        methods:{
+            handleCurrentChange(page) {
+                alert(page)
+            }
+        }
+    });
+</script>
+</body>
+</html>
