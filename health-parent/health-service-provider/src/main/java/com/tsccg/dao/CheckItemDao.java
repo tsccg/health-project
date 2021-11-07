@@ -12,4 +12,12 @@ public interface CheckItemDao {
     void add(CheckItem checkItem);
 
     Page<CheckItem> selectByCondition(String queryString);
+
+    long findCountCheckItemById(Integer id);
+
+    void deleteById(Integer id);
+
+    CheckItem findById(Integer id);
+
+    void update(CheckItem checkItem);
 }

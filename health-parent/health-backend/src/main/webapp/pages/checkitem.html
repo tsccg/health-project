@@ -27,7 +27,7 @@
                 <div class="box">
                     <div class="filter-container">
                         <el-input placeholder="项目编码/项目名称" v-model="pagination.queryString" style="width: 200px;" class="filter-item"></el-input>
-                        <el-button @click="findPage()" class="dalfBut">查询</el-button>
+                        <el-button @click="_findPage()" class="dalfBut">查询</el-button>
                         <el-button type="primary" class="butT" @click="handleCreate()">新建</el-button>
                     </div>
                     <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
@@ -230,6 +230,33 @@
             methods: {
                 //编辑
                 handleEdit() {
+                    //1.表单校验
+                    this.$refs['dataEditForm'].validate((valid)=>{
+                        if(valid) {
+                            //2.表单检验通过，发送ajax请求
+                            axios.post("/checkitem/edit.do",this.formData).then((resp)=>{
+                                if(resp.data.flag) {
+                                    //编辑成功，弹出成功提示信息
+                                    this.$message({
+                                        message:resp.data.message,
+                                        type:"success"
+                                    });
+                                } else {
+                                    //编辑失败，弹出失败提示信息
+                                    this.$message.error(resp.data.message);
+                                }
+                            }).finally(()=>{
+                                //无论编辑成功与否，执行分页查询
+                                this.findPage();
+                                //隐藏编辑界面
+                                this.dialogFormVisible4Edit = false;
+                            })
+                        } else {
+                            //表单检验失败
+                            this.$message.error("表单检验失败!");
+                            return false;
+                        }
+                    })
                 },
                 //添加
                 handleAdd () {
@@ -276,17 +303,32 @@
                         this.dataList = resp.data.rows;
                     })
                 },
+                _findPage() {
+                    this.pagination.currentPage = 1;
+                    this.findPage();
+                },
                 // 重置表单
                 resetForm() {
                     this.formData = {};
                 },
                 // 弹出添加窗口
                 handleCreate() {
+                    //设置新增表单可见
                     this.dialogFormVisible = true;
                     this.resetForm();
                 },
                 // 弹出编辑窗口
                 handleUpdate(row) {
+                    //回显数据
+                    axios.get("/checkitem/findById.do?id=" + row.id).then((resp)=>{
+                        if(resp.data.flag) {
+                            //设置编辑表单可见
+                            this.dialogFormVisible4Edit = true;
+                            this.formData = resp.data.data;
+                        } else{
+                            this.$message.error(resp.data.message);
+                        }
+                    })
                 },
                 //切换页码
                 handleCurrentChange(currentPage) {
@@ -295,6 +337,26 @@
                 },
                 // 删除
                 handleDelete(row) {
+                    // alert(row.id)
+                    this.$confirm("您确定要删除当前数据吗?","提示",{
+                        type: "warning"
+                    }).then(()=>{
+                        // alert("用户点击了确定按钮")
+                        axios.get("/checkitem/delete.do?id=" + row.id).then((resp)=>{
+                            if(resp.data.flag) {
+                                this.$message({
+                                    message:resp.data.message,
+                                    type:"success"
+                                });
+                                this.findPage();
+                            } else {
+                                this.$message.error(resp.data.message);
+                            }
+                        })
+                    }).catch(()=>{
+                        // alert("用户点击了取消按钮")
+                        this.$message("操作已取消");
+                    })
                 }
             }
         })
