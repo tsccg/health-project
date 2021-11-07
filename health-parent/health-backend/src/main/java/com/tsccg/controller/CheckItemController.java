@@ -2,6 +2,8 @@ package com.tsccg.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.tsccg.constant.MessageConstant;
+import com.tsccg.entity.PageResult;
+import com.tsccg.entity.QueryPageBean;
 import com.tsccg.entity.Result;
 import com.tsccg.pojo.CheckItem;
 import com.tsccg.service.CheckItemService;
@@ -20,7 +22,7 @@ public class CheckItemController {
     //远程注入
     @Reference
     private CheckItemService checkItemService;
-
+    //添加记录
     @RequestMapping("/add")
     public Result add(@RequestBody CheckItem checkItem) {//返回的表单数据是json格式，使用@RequestBody解析
         try {
@@ -32,5 +34,11 @@ public class CheckItemController {
             return new Result(false,MessageConstant.ADD_CHECKITEM_FAIL);
         }
         return new Result(true,MessageConstant.ADD_CHECKITEM_SUCCESS);
+    }
+    //分页查询
+    @RequestMapping("/findPage")
+    public PageResult findPage(@RequestBody QueryPageBean queryPageBean) {
+        PageResult pageResult = checkItemService.pageQuery(queryPageBean);
+        return pageResult;
     }
 }

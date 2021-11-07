@@ -1,5 +1,6 @@
 package com.tsccg.dao;
 
+import com.github.pagehelper.Page;
 import com.tsccg.pojo.CheckItem;
 
 /**
@@ -9,4 +10,6 @@ import com.tsccg.pojo.CheckItem;
  */
 public interface CheckItemDao {
     void add(CheckItem checkItem);
+
+    Page<CheckItem> selectByCondition(String queryString);
 }

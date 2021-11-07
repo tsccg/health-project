@@ -1,5 +1,7 @@
 package com.tsccg.service;
 
+import com.tsccg.entity.PageResult;
+import com.tsccg.entity.QueryPageBean;
 import com.tsccg.pojo.CheckItem;
 
 /**
@@ -8,4 +10,6 @@ import com.tsccg.pojo.CheckItem;
  */
 public interface CheckItemService {
     void add(CheckItem checkItem);
+
+    PageResult pageQuery(QueryPageBean queryPageBean);
 }
