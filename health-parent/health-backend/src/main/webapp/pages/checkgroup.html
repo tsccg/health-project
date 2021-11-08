@@ -353,6 +353,10 @@
                 },
                 // 弹出编辑窗口
                 handleUpdate(row) {
+                    // alert(row.id)
+                    this.dialogFormVisible4Edit = true;
+                    this.activeName = 'first';
+
                 },
                 //切换页码
                 handleCurrentChange(currentPage) {
@@ -361,6 +365,26 @@
                 },
                 // 删除
                 handleDelete(row) {
+                    this.$confirm("您确定要删除当前检查组吗?","提示",{
+                        type:"warning"
+                    }).then(()=>{
+                        // alert(row.id)
+                        axios.get("/checkGroup/delete.do?id="+row.id).then((resp)=>{
+                            if(resp.data.flag) {
+                                this.$message({
+                                    type:'success',
+                                    message:resp.data.message
+                                });
+                            } else {
+                                this.$message.error(resp.data.message);
+                            }
+                        }).finally(()=>{
+                            this.findPage();
+                        })
+                    }).catch(()=>{
+                        this.$message("操作已取消")
+                    })
+
                 }
             }
         })

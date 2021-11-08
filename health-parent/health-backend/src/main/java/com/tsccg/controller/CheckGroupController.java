@@ -57,4 +57,19 @@ public class CheckGroupController {
     public PageResult findPage(@RequestBody QueryPageBean queryPageBean) {
         return checkGroupService.pageQuery(queryPageBean);
     }
+
+    /**
+     * 根据id删除检查组及对应关联表记录
+     * @param id 待删除记录id
+     * @return 删除结果
+     */
+    @RequestMapping("/delete")
+    public Result delete(Integer id) {
+        try{
+            checkGroupService.deleteById(id);
+        } catch(Exception e) {
+            return new Result(false,MessageConstant.DELETE_CHECKGROUP_FAIL);
+        }
+        return new Result(true,MessageConstant.DELETE_CHECKGROUP_SUCCESS);
+    }
 }

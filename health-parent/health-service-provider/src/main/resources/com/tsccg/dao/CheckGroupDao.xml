@@ -25,4 +25,12 @@
             where code=#{value} or name=#{value}
         </if>
     </select>
+    <!--通过id删除检查项id对应的关联数据-->
+    <delete id="deleteConnectionById" parameterType="int">
+        delete from t_checkgroup_checkitem where checkgroup_id = #{checkgroup_id}
+    </delete>
+    <!--通过id删除检查项-->
+    <delete id="deleteCheckGroupById" parameterType="int">
+        delete from t_checkgroup where id = #{id}
+    </delete>
 </mapper>

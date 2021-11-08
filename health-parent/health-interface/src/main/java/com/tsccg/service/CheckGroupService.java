@@ -23,4 +23,10 @@ public interface CheckGroupService {
      * @return 返回分页结果：1.总记录条数 2.当前页的所有记录
      */
     PageResult pageQuery(QueryPageBean queryPageBean);
+
+    /**
+     * 删除检查项
+     * @param id 待删除记录id
+     */
+    void deleteById(Integer id);
 }

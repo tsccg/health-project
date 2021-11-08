@@ -72,4 +72,22 @@ public class CheckGroupServiceImpl implements CheckGroupService {
         List<CheckGroup> rows = page.getResult();
         return new PageResult(total,rows);
     }
+    /**
+     * 删除检查项以及对应关联表的关联数据
+     * @param id 待删除检查项id
+     */
+    @Override
+    public void deleteById(Integer id) {
+        //先删除检查项对应的关联数据，再删除检查项数据
+        this.deleteConnectionById(id);
+        checkGroupDao.deleteCheckGroupById(id);
+    }
+
+    /**
+     * 通过id删除检查项id对应的关联数据
+     * @param id 待删除的检查项记录id
+     */
+    public void deleteConnectionById(Integer id) {
+        checkGroupDao.deleteConnectionById(id);
+    }
 }

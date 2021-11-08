@@ -28,4 +28,15 @@ public interface CheckGroupDao {
      * @return 返回分页对象
      */
     Page<CheckGroup> selectByCondition(String queryString);
+    /**
+     * 通过id删除检查项id对应的关联数据
+     * @param id 待删除的检查项记录id
+     */
+    void deleteConnectionById(Integer id);
+     /**
+     * 删除检查项以及对应关联表的关联数据
+     * @param id 待删除检查项id
+     */
+    void deleteCheckGroupById(Integer id);
+
 }
