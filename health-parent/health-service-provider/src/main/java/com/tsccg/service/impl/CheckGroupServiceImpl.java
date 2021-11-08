@@ -1,13 +1,18 @@
 package com.tsccg.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.tsccg.dao.CheckGroupDao;
+import com.tsccg.entity.PageResult;
+import com.tsccg.entity.QueryPageBean;
 import com.tsccg.pojo.CheckGroup;
 import com.tsccg.service.CheckGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,7 +37,6 @@ public class CheckGroupServiceImpl implements CheckGroupService {
         Integer checkGroupId = checkGroup.getId();
         setConnection(checkItemIds,checkGroupId);
     }
-
     /**
      * 设置检查组和检查项的关联关系,往检查组和检查项的关联表中添加数据
      * @param checkItemIds 请求组中所有检查项的id
@@ -47,5 +51,25 @@ public class CheckGroupServiceImpl implements CheckGroupService {
                 checkGroupDao.setConnection(map);
             }
         }
+    }
+    /**
+     * 分页查询
+     * @param queryPageBean 分页查询条件： 1.当前页码 2.每页展示数据条数 3.查询条件
+     * @return 返回分页结果：1.总记录条数 2.当前页的所有记录
+     */
+    @Override
+    public PageResult pageQuery(QueryPageBean queryPageBean) {
+        //拿出三个分页查询条件
+        Integer currentPage = queryPageBean.getCurrentPage();
+        Integer pageSize = queryPageBean.getPageSize();
+        String queryString = queryPageBean.getQueryString();
+        //使用分页助手
+        PageHelper.startPage(currentPage,pageSize);
+        Page<CheckGroup> page = checkGroupDao.selectByCondition(queryString);
+        //获取总记录条数
+        long total = page.getTotal();
+        //获取当前页的记录
+        List<CheckGroup> rows = page.getResult();
+        return new PageResult(total,rows);
     }
 }

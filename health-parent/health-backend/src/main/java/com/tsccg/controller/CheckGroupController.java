@@ -3,6 +3,8 @@ package com.tsccg.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.tsccg.constant.MessageConstant;
+import com.tsccg.entity.PageResult;
+import com.tsccg.entity.QueryPageBean;
 import com.tsccg.entity.Result;
 import com.tsccg.pojo.CheckGroup;
 import com.tsccg.service.CheckGroupService;
@@ -45,5 +47,14 @@ public class CheckGroupController {
             return new Result(false, MessageConstant.ADD_CHECKGROUP_FAIL);
         }
         return new Result(true,MessageConstant.ADD_CHECKGROUP_SUCCESS);
+    }
+    /**
+     * 分页查询
+     * @param queryPageBean 分页查询条件： 1.当前页码 2.每页展示数据条数 3.查询条件
+     * @return 返回分页结果：1.总记录条数 2.当前页的所有记录
+     */
+    @RequestMapping("/findPage")
+    public PageResult findPage(@RequestBody QueryPageBean queryPageBean) {
+        return checkGroupService.pageQuery(queryPageBean);
     }
 }

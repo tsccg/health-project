@@ -1,5 +1,6 @@
 package com.tsccg.dao;
 
+import com.github.pagehelper.Page;
 import com.tsccg.pojo.CheckGroup;
 
 import java.util.Map;
@@ -19,5 +20,12 @@ public interface CheckGroupDao {
      * 设置检查组和检查项的关联关系,往检查组和检查项的关联表中添加数据
      * @param map 关联表中单条检查组id和检查项id
      */
-    void setConnection(Map map);
+    void setConnection(Map<String,Integer> map);
+
+    /**
+     * 分页查询
+     * @param queryString 分页查询条件
+     * @return 返回分页对象
+     */
+    Page<CheckGroup> selectByCondition(String queryString);
 }
