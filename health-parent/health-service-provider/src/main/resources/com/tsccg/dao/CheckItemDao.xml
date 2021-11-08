@@ -61,4 +61,8 @@
         </set>
         where id = #{id}
     </update>
+    <!--查询所有数据-->
+    <select id="findAll" resultType="com.tsccg.pojo.CheckItem">
+        select id,code,name,sex,age,price,type,attention,remark from t_checkitem
+    </select>
 </mapper>

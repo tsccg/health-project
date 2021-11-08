@@ -22,12 +22,21 @@ import java.util.List;
 public class CheckItemServiceImpl implements CheckItemService {
     @Autowired
     private CheckItemDao checkItemDao;
-    //添加记录
+
+    /**
+     * 添加记录
+     * @param checkItem 待添加的记录
+     */
     @Override
     public void add(CheckItem checkItem) {
         checkItemDao.add(checkItem);
     }
-    //分页查询
+
+    /**
+     * 分页查询
+     * @param queryPageBean 分页查询条件：currentPage pageSize queryString
+     * @return 分页结果：total rows
+     */
     @Override
     public PageResult pageQuery(QueryPageBean queryPageBean) {
         Integer currentPage = queryPageBean.getCurrentPage();
@@ -40,7 +49,11 @@ public class CheckItemServiceImpl implements CheckItemService {
         List<CheckItem> rows = checkItems.getResult();
         return new PageResult(total,rows);
     }
-    //删除记录
+
+    /**
+     * 删除记录
+     * @param id 待删除检查项的id
+     */
     @Override
     public void deleteById(Integer id) {
         //不能直接删除，需要检查当前检查项是否与检查组关联，如果关联则不能删除
@@ -50,15 +63,31 @@ public class CheckItemServiceImpl implements CheckItemService {
         }
         checkItemDao.deleteById(id);
     }
-    //根据id查询检查项
+
+    /**
+     * 根据id查询检查项
+     * @param id 目标id
+     * @return 检查项数据
+     */
     @Override
     public CheckItem findById(Integer id) {
-        CheckItem checkItem = checkItemDao.findById(id);
-        return checkItem;
+        return checkItemDao.findById(id);
     }
-
+    /**
+     * 编辑记录，将所编辑的记录更新
+     * @param checkItem checkItem 待更新的记录
+     */
     @Override
     public void edit(CheckItem checkItem) {
         checkItemDao.update(checkItem);
+    }
+
+    /**
+     * 查询所有数据
+     * @return 返回装有所有检查项数据的List集合
+     */
+    @Override
+    public List<CheckItem> findAll() {
+        return checkItemDao.findAll();
     }
 }

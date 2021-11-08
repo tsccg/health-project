@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tsccg.dao.CheckGroupDao">
+    <insert id="add" parameterType="com.tsccg.pojo.CheckGroup">
+        <!--再通过MyBatis框架提供的selectKey标签获取自增生成的id-->
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        <!--先执行插入语句-->
+        insert into t_checkgroup(code,name,helpCode,sex,remark,attention)
+        values(#{code},#{name},#{helpCode},#{sex},#{remark},#{attention})
+    </insert>
+    <insert id="setConnection" parameterType="hashmap">
+        insert into t_checkgroup_checkitem(checkgroup_id,checkitem_id)
+        values(#{checkgroup_id},#{checkitem_id})
+    </insert>
+</mapper>

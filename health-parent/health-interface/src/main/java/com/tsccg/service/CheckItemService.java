@@ -4,6 +4,8 @@ import com.tsccg.entity.PageResult;
 import com.tsccg.entity.QueryPageBean;
 import com.tsccg.pojo.CheckItem;
 
+import java.util.List;
+
 /**
  * @Author: TSCCG
  * @Date: 2021/11/05 22:46
@@ -18,4 +20,6 @@ public interface CheckItemService {
     CheckItem findById(Integer id);
 
     void edit(CheckItem checkItem);
+
+    List<CheckItem> findAll();
 }
