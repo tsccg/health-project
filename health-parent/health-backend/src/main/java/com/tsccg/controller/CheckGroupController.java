@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
+import java.util.List;
+
 
 /**
  * @Author: TSCCG
@@ -71,5 +72,52 @@ public class CheckGroupController {
             return new Result(false,MessageConstant.DELETE_CHECKGROUP_FAIL);
         }
         return new Result(true,MessageConstant.DELETE_CHECKGROUP_SUCCESS);
+    }
+
+    /**
+     * 根据id查询检查组数据
+     * @param id 检查组id
+     * @return 返回查询结果及检查组数据
+     */
+    @RequestMapping("/findById")
+    public Result findById(Integer id) {
+        try {
+            CheckGroup checkGroup = checkGroupService.findById(id);
+            return new Result(true,MessageConstant.QUERY_CHECKGROUP_SUCCESS,checkGroup);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,MessageConstant.QUERY_CHECKGROUP_FAIL);
+        }
+    }
+    /**
+     * 根据检查组id查询其对应的所有检查项id
+     * @param id 检查组id
+     * @return 查询结果：1.true/false 2.提示信息 3.存有所有检查项id的List集合
+     */
+    @RequestMapping("/findCheckItemIds")
+    public Result findCheckItemIds(Integer id) {
+        try {
+            List<Integer> checkItemIds = checkGroupService.findCheckItemIdsById(id);
+            return new Result(true,MessageConstant.QUERY_CHECKITEM_SUCCESS,checkItemIds);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, MessageConstant.QUERY_CHECKITEM_FAIL);
+        }
+    }
+    /**
+     * 编辑检查组
+     * @param checkGroup 编辑后的检查组信息
+     * @param checkItemIds 检查组对应检查项id
+     * @return 编辑执行结果
+     */
+    @RequestMapping("/edit")
+    public Result edit(@RequestBody CheckGroup checkGroup,Integer[] checkItemIds) {
+        try {
+            checkGroupService.edit(checkGroup,checkItemIds);
+            return new Result(true,MessageConstant.EDIT_CHECKGROUP_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,MessageConstant.EDIT_CHECKGROUP_FAIL);
+        }
     }
 }

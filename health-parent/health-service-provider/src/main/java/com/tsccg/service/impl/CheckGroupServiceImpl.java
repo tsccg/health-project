@@ -37,6 +37,7 @@ public class CheckGroupServiceImpl implements CheckGroupService {
         Integer checkGroupId = checkGroup.getId();
         setConnection(checkItemIds,checkGroupId);
     }
+
     /**
      * 设置检查组和检查项的关联关系,往检查组和检查项的关联表中添加数据
      * @param checkItemIds 请求组中所有检查项的id
@@ -72,9 +73,10 @@ public class CheckGroupServiceImpl implements CheckGroupService {
         List<CheckGroup> rows = page.getResult();
         return new PageResult(total,rows);
     }
+
     /**
-     * 删除检查项以及对应关联表的关联数据
-     * @param id 待删除检查项id
+     * 删除检查组以及对应关联表的关联数据
+     * @param id 待删除检查组id
      */
     @Override
     public void deleteById(Integer id) {
@@ -84,10 +86,43 @@ public class CheckGroupServiceImpl implements CheckGroupService {
     }
 
     /**
-     * 通过id删除检查项id对应的关联数据
-     * @param id 待删除的检查项记录id
+     * 通过id删除检查组id对应的关联数据
+     * @param id 待删除的检查组记录id
      */
     public void deleteConnectionById(Integer id) {
         checkGroupDao.deleteConnectionById(id);
+    }
+     /**
+     * 根据id查询检查组数据
+     * @param id 检查组id
+     * @return 返回检查组数据
+     */
+    @Override
+    public CheckGroup findById(Integer id) {
+        return checkGroupDao.findById(id);
+    }
+
+    /**
+     * 根据检查组id查询其对应的所有检查项id
+     * @param id 检查组id
+     * @return 查询结果：存有所有检查项id的List集合
+     */
+    @Override
+    public List<Integer> findCheckItemIdsById(Integer id) {
+        return checkGroupDao.findCheckItemIdsById(id);
+    }
+    /**
+     * 编辑检查组，同时需要更新和检查项的关联关系
+     * @param checkGroup 编辑后的检查组信息
+     * @param checkItemIds 检查组对应检查项id
+     */
+    @Override
+    public void edit(CheckGroup checkGroup, Integer[] checkItemIds) {
+        //1.根据检查组id删除中间表数据（清理原有关联关系）
+        this.deleteConnectionById(checkGroup.getId());
+        //2.更新检查组数据
+        checkGroupDao.edit(checkGroup);
+        //3.重新建立检查组和检查项关联关系
+        this.setConnection(checkItemIds,checkGroup.getId());
     }
 }

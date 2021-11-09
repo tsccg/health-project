@@ -25,12 +25,47 @@
             where code=#{value} or name=#{value}
         </if>
     </select>
-    <!--通过id删除检查项id对应的关联数据-->
+    <!--通过id删除检查组id对应的关联数据-->
     <delete id="deleteConnectionById" parameterType="int">
         delete from t_checkgroup_checkitem where checkgroup_id = #{checkgroup_id}
     </delete>
-    <!--通过id删除检查项-->
+    <!--通过id删除检查组数据-->
     <delete id="deleteCheckGroupById" parameterType="int">
         delete from t_checkgroup where id = #{id}
     </delete>
+    <!--根据id查询检查组数据-->
+    <select id="findById" parameterType="int" resultType="com.tsccg.pojo.CheckGroup">
+        select id,code,name,helpCode,sex,remark,attention from t_checkgroup
+        where id = #{id}
+    </select>
+    <!--根据检查组id查询其对应所有检查项-->
+    <select id="findCheckItemIdsById" parameterType="int" resultType="int">
+        select checkitem_id from t_checkgroup_checkitem
+        where checkgroup_id = #{checkgroup_id}
+    </select>
+    <!--更新检查组信息-->
+    <update id="edit" parameterType="com.tsccg.pojo.CheckGroup">
+        update t_checkgroup
+        <set>
+            <if test="code!=null">
+                code = #{code},
+            </if>
+            <if test="name!=null">
+                name = #{name},
+            </if>
+            <if test="helpCode!=null">
+                helpCode = #{helpCode},
+            </if>
+            <if test="sex!=null">
+                sex = #{sex},
+            </if>
+            <if test="remark!=null">
+                remark = #{remark},
+            </if>
+            <if test="attention!=null">
+                attention = #{attention}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
 </mapper>

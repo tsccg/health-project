@@ -319,11 +319,11 @@
                 },
                 // 弹出编辑窗口
                 handleUpdate(row) {
+                    //设置编辑表单可见
+                    this.dialogFormVisible4Edit = true;
                     //回显数据
                     axios.get("/checkitem/findById.do?id=" + row.id).then((resp)=>{
                         if(resp.data.flag) {
-                            //设置编辑表单可见
-                            this.dialogFormVisible4Edit = true;
                             this.formData = resp.data.data;
                         } else{
                             this.$message.error(resp.data.message);

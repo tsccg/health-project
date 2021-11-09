@@ -176,15 +176,15 @@
                             <template>
                                 <el-tabs v-model="activeName" type="card">
                                     <el-tab-pane label="基本信息" name="first">
-                                        <el-form label-position="right" label-width="100px">
+                                        <el-form ref="dataEditForm" :rules="rules" :model="formData" label-position="right" label-width="100px">
                                             <el-row>
                                                 <el-col :span="12">
-                                                    <el-form-item label="编码">
+                                                    <el-form-item label="编码" prop="code">
                                                         <el-input v-model="formData.code"/>
                                                     </el-form-item>
                                                 </el-col>
                                                 <el-col :span="12">
-                                                    <el-form-item label="名称">
+                                                    <el-form-item label="名称" prop="name">
                                                         <el-input v-model="formData.name"/>
                                                     </el-form-item>
                                                 </el-col>
@@ -286,6 +286,29 @@
             methods: {
                 //编辑
                 handleEdit() {
+                    //表单校验
+                    this.$refs['dataEditForm'].validate((validate)=>{
+                        if(validate) {
+                            //关闭编辑窗口
+                            this.dialogFormVisible4Edit = false;
+                            axios.post("/checkGroup/edit.do?checkItemIds="+this.checkItemIds,this.formData).then((resp)=>{
+                                if(resp.data.flag) {
+                                    this.$message({
+                                        type:"success",
+                                        message:resp.data.message
+                                    })
+                                } else {
+                                    this.$message.error(resp.data.message);
+                                }
+                            }).finally(()=>{
+                                this.findPage();
+                            })
+                        } else {
+                            //表单校验失败
+                            this.$message.error("表单校验失败!")
+                            return false;
+                        }
+                    })
                 },
                 //添加
                 handleAdd () {
@@ -349,14 +372,38 @@
                         } else {
                             this.$message.error("resp.data.message")
                         }
-                    })
+                    });
                 },
                 // 弹出编辑窗口
                 handleUpdate(row) {
                     // alert(row.id)
                     this.dialogFormVisible4Edit = true;
                     this.activeName = 'first';
-
+                    //第一次ajax请求：回显表单数据
+                    axios.get("/checkGroup/findById.do?id="+row.id).then((resp)=>{
+                        if(resp.data.flag){
+                            this.formData = resp.data.data;
+                        } else {
+                            this.$message.error(resp.data.message);
+                        }
+                    });
+                    //第二次ajax请求：回显所有检查项数据
+                    axios.get("/checkitem/findAll.do").then((resp)=>{
+                        if(resp.data.flag) {
+                            this.tableData = resp.data.data;
+                            //第三次ajax请求：回显当前检查组对应的检查项
+                            axios.get("/checkGroup/findCheckItemIds.do?id="+row.id).then((resp)=>{
+                                if(resp.data.flag){
+                                    //List<Integer>
+                                    this.checkItemIds = resp.data.data;
+                                } else {
+                                    this.$message.error(resp.data.message);
+                                }
+                            })
+                        } else {
+                            this.$message.error(resp.data.message);
+                        }
+                    });
                 },
                 //切换页码
                 handleCurrentChange(currentPage) {
