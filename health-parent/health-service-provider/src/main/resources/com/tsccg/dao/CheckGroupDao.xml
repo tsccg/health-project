@@ -68,4 +68,8 @@
         </set>
         where id=#{id}
     </update>
+    <!--查询所有检查组-->
+    <select id="findAll" resultType="com.tsccg.pojo.CheckGroup">
+        select id,code,name,helpCode,sex,remark,attention from t_checkgroup
+    </select>
 </mapper>

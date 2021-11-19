@@ -7,6 +7,7 @@ import com.tsccg.entity.PageResult;
 import com.tsccg.entity.QueryPageBean;
 import com.tsccg.entity.Result;
 import com.tsccg.pojo.CheckGroup;
+import com.tsccg.pojo.CheckItem;
 import com.tsccg.service.CheckGroupService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -118,6 +119,20 @@ public class CheckGroupController {
         } catch (Exception e) {
             e.printStackTrace();
             return new Result(false,MessageConstant.EDIT_CHECKGROUP_FAIL);
+        }
+    }
+    /**
+     * 查询所有检查组
+     * @return 返回装有所有检查组的List集合
+     */
+    @RequestMapping("/findAll")
+    public Result findAll() {
+        try{
+            List<CheckGroup> list = checkGroupService.findAll();
+            return new Result(true,MessageConstant.QUERY_CHECKGROUP_SUCCESS,list);
+        } catch(Exception e) {
+            e.printStackTrace();
+            return new Result(false,MessageConstant.QUERY_CHECKGROUP_FAIL);
         }
     }
 }

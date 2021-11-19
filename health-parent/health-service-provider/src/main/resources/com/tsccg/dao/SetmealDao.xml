@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tsccg.dao.SetmealDao">
+<!--    private Integer id;-->
+<!--    private String name;-->
+<!--    private String code;-->
+<!--    private String helpCode;-->
+<!--    private String sex;//套餐适用性别：0不限 1男 2女-->
+<!--    private String age;//套餐适用年龄-->
+<!--    private Float price;//套餐价格-->
+<!--    private String remark;-->
+<!--    private String attention;-->
+<!--    private String img;//套餐对应图片存储路径-->
+    <!-- 添加套餐 -->
+    <insert id="add" parameterType="com.tsccg.pojo.Setmeal">
+        insert into t_setmeal(name,code,helpCode,sex,age,price,remark,attention,img)
+        values(#{name},#{code},#{helpCode},#{sex},#{age},#{price},#{remark},#{attention},#{img})
+        <!--再通过MyBatis框架提供的selectKey标签获取自增生成的id-->
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+    <!-- 根据套餐id添加关联信息 -->
+    <insert id="setConnection" parameterType="hashmap">
+        insert into t_setmeal_checkgroup(setmeal_id,checkgroup_id)
+        values(#{setmeal_id},#{checkgroup_id})
+    </insert>
+    <!-- 分页查询 -->
+    <select id="selectByCondition" parameterType="string" resultType="com.tsccg.pojo.Setmeal">
+        select id,name,code,helpCode,sex,age,price,remark,attention,img from t_setmeal
+        <if test="value!=null and value.length>0">
+            where code = #{value} or name = #{value}
+        </if>
+    </select>
+</mapper>

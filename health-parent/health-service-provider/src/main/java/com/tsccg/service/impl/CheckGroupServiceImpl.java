@@ -35,7 +35,9 @@ public class CheckGroupServiceImpl implements CheckGroupService {
         checkGroupDao.add(checkGroup);
         //获取当前检查组记录插入后生成的自增id
         Integer checkGroupId = checkGroup.getId();
-        setConnection(checkItemIds,checkGroupId);
+        if(checkItemIds != null && checkItemIds.length > 0) {
+            setConnection(checkItemIds,checkGroupId);
+        }
     }
 
     /**
@@ -124,5 +126,13 @@ public class CheckGroupServiceImpl implements CheckGroupService {
         checkGroupDao.edit(checkGroup);
         //3.重新建立检查组和检查项关联关系
         this.setConnection(checkItemIds,checkGroup.getId());
+    }
+    /**
+     * 查询所有检查组
+     * @return 返回装有所有检查组的List集合
+     */
+    @Override
+    public List<CheckGroup> findAll() {
+        return checkGroupDao.findAll();
     }
 }

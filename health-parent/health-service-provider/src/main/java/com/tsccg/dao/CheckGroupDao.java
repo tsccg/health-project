@@ -56,4 +56,9 @@ public interface CheckGroupDao {
      * @param checkGroup 编辑后的检查组信息
      */
     void edit(CheckGroup checkGroup);
+    /**
+     * 查询所有检查组
+     * @return 返回装有所有检查组的List集合
+     */
+    List<CheckGroup> findAll();
 }

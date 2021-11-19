@@ -50,4 +50,9 @@ public interface CheckGroupService {
      * @param checkItemIds 检查组对应检查项id
      */
     void edit(CheckGroup checkGroup, Integer[] checkItemIds);
+    /**
+     * 查询所有检查组
+     * @return 返回装有所有检查组的List集合
+     */
+    List<CheckGroup> findAll();
 }
