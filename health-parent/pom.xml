@@ -12,6 +12,7 @@
         <module>health-interface</module>
         <module>health-service-provider</module>
         <module>health-backend</module>
+        <module>health-jobs</module>
     </modules>
     <packaging>pom</packaging>
     <!-- 集中定义依赖版本号 -->

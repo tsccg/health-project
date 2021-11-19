@@ -34,4 +34,58 @@
             where code = #{value} or name = #{value}
         </if>
     </select>
+    <!--根据套餐id删除关联表数据-->
+    <delete id="deleteConnection" parameterType="int">
+        delete from t_setmeal_checkgroup
+        where setmeal_id=#{setmeal_id}
+    </delete>
+    <!--根据套餐id删除套餐信息-->
+    <delete id="deleteById" parameterType="int">
+        delete from t_setmeal
+        where id=#{id}
+    </delete>
+    <!--根据套餐id查询套餐信息-->
+    <select id="findById" parameterType="int" resultType="com.tsccg.pojo.Setmeal">
+        select id,name,code,helpCode,sex,age,price,remark,attention,img from t_setmeal
+        where id = #{id}
+    </select>
+    <!--根据套餐id查询对应检查组id-->
+    <select id="findCheckGroupIds" parameterType="int" resultType="int">
+        select checkgroup_id from t_setmeal_checkgroup where setmeal_id = #{id}
+    </select>
+    <!--更新套餐信息-->
+    <update id="update" parameterType="com.tsccg.pojo.Setmeal">
+        update t_setmeal
+        <set>
+<!--            name,code,helpCode,sex,age,price,remark,attention,img-->
+            <if test="name!=null">
+                name = #{name},
+            </if>
+            <if test="code!=null">
+                code = #{code},
+            </if>
+            <if test="helpCode!=null">
+                helpCode = #{helpCode},
+            </if>
+            <if test="sex!=null">
+                sex = #{sex},
+            </if>
+            <if test="age!=null">
+                age = #{age},
+            </if>
+            <if test="price!=null">
+                price = #{price},
+            </if>
+            <if test="remark!=null">
+                remark = #{remark},
+            </if>
+            <if test="attention!=null">
+                attention = #{attention},
+            </if>
+            <if test="img!=null">
+                img = #{img}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
 </mapper>

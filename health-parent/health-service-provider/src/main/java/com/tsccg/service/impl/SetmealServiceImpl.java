@@ -44,25 +44,7 @@ public class SetmealServiceImpl implements SetmealService {
             this.setConnection(setmealId,checkgroupIds);
         }
         //3.将存入数据库中的图片名称存入redis数据库的另一个set集合
-        jedisPool.getResource().sadd(
-                RedisConstant.SETMEAL_PIC_DB_RESOURCES,setmeal.getImg());
-    }
-
-    /**
-     * 根据套餐id向关系表中添加关联检查组
-     * @param setmealId 套餐id
-     * @param checkgroupIds 检查组id数组
-     */
-    private void setConnection(Integer setmealId,Integer[] checkgroupIds) {
-        if(setmealId != null && checkgroupIds != null) {
-            for (Integer checkgroupId : checkgroupIds) {
-                Map<String,Integer> map = new HashMap<>();
-                map.put("setmeal_id",setmealId);
-                map.put("checkgroup_id",checkgroupId);
-                setmealDao.setConnection(map);
-            }
-
-        }
+        this.addImgToDB(setmeal.getImg());
     }
 
     /**
@@ -83,5 +65,104 @@ public class SetmealServiceImpl implements SetmealService {
         long total = page.getTotal();
         List<Setmeal> rows = page.getResult();
         return new PageResult(total,rows);
+    }
+
+    /**
+     * 根据套餐id删除套餐信息
+     *      1.将该套餐对应图片名从redis的数据库set集合中删除
+     *      2.删除关联表中对应的检查组
+     *      3.删除套餐表中的记录
+     * @param id 套餐id
+     */
+    @Override
+    public void deleteById(Integer id,String img) {
+        //1.将该套餐对应图片名从redis的数据库set集合中删除
+        this.deleteImgFormDB(img);
+        //2.删除关联表中对应的检查组
+        this.deleteConnection(id);
+        //3.删除套餐表中的记录
+        setmealDao.deleteById(id);
+    }
+
+
+    /**
+     * 根据id查询套餐信息
+     * @param id 套餐id
+     * @return 套餐信息
+     */
+    @Override
+    public Setmeal findById(Integer id) {
+        return setmealDao.findById(id);
+    }
+
+    /**
+     * 根据套餐id查询对应检查组id
+     * @param id 套餐id
+     * @return 存有所有检查组id的List集合
+     */
+    @Override
+    public List<Integer> findCheckGroupIds(Integer id) {
+        return setmealDao.findCheckGroupIds(id);
+    }
+
+    /**
+     * 更新套餐，同时需要更新和检查组的关联关系
+     * @param setmeal 套餐信息
+     * @param checkGroupIds 套餐对应检查组id
+     */
+    @Override
+    public void update(Setmeal setmeal, Integer[] checkGroupIds,String oldImg) {
+        //将旧图片从redis数据库集合中删除
+        this.deleteImgFormDB(oldImg);
+        //将新图片添加到redis数据库集合中
+        this.addImgToDB(setmeal.getImg());
+
+        //1.根据套餐id删除中间表数据（清理原有关联关系）
+        Integer id = setmeal.getId();
+        this.deleteConnection(id);
+        //2.更新套餐基本信息
+        setmealDao.update(setmeal);
+        //3.向中间表添加数据(建立新的关联关系)
+        if(checkGroupIds != null) {
+            this.setConnection(id,checkGroupIds);
+        }
+    }
+    /**
+     * 从redis的DB集合中删除图片名
+     * @param img 待删除图片名
+     */
+    private void deleteImgFormDB(String img) {
+        jedisPool.getResource().srem(RedisConstant.SETMEAL_PIC_DB_RESOURCES,img);
+    }
+
+    /**
+     * 将图片名添加到redis的DB集合中
+     * @param img 待添加图片名
+     */
+    private void addImgToDB(String img) {
+        jedisPool.getResource().sadd(RedisConstant.SETMEAL_PIC_DB_RESOURCES,img);
+    }
+    /**
+     * 根据套餐id向关系表中添加关联检查组
+     * @param setmealId 套餐id
+     * @param checkgroupIds 检查组id数组
+     */
+    private void setConnection(Integer setmealId,Integer[] checkgroupIds) {
+        if(setmealId != null && checkgroupIds != null) {
+            for (Integer checkgroupId : checkgroupIds) {
+                Map<String,Integer> map = new HashMap<>();
+                map.put("setmeal_id",setmealId);
+                map.put("checkgroup_id",checkgroupId);
+                setmealDao.setConnection(map);
+            }
+
+        }
+    }
+    /**
+     * 根据套餐id删除对应关联表数据
+     * @param id 套餐id
+     */
+    private void deleteConnection(Integer id) {
+        setmealDao.deleteConnection(id);
     }
 }

@@ -10,16 +10,13 @@ import com.tsccg.pojo.Setmeal;
 import com.tsccg.service.SetmealService;
 import com.tsccg.utils.QiniuUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -70,7 +67,6 @@ public class SetmealController {
      */
     @RequestMapping("/add")
     public Result add(@RequestBody Setmeal setmeal,Integer[] checkgroupIds) {
-        System.out.println(Arrays.toString(checkgroupIds));
         try {
             setmealService.add(setmeal,checkgroupIds);
         } catch (Exception e) {
@@ -88,5 +84,79 @@ public class SetmealController {
     @RequestMapping("/findPage")
     public PageResult findPage(@RequestBody QueryPageBean queryPageBean) {
         return setmealService.findPage(queryPageBean);
+    }
+
+    /**
+     * 删除套餐，同时还要将套餐对应图片从redis数据库集合中删除
+     * @param id 套餐id
+     * @param img 套餐对应图片名称
+     * @return 执行结果
+     */
+    @RequestMapping("/delete")
+    public Result delete(Integer id,String img) {
+//        System.out.println(id);
+//        System.out.println(img);
+        try {
+            setmealService.deleteById(id,img);
+            return new Result(true,MessageConstant.DELETE_SETMEAL_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,MessageConstant.DELETE_SETMEAL_FAIL);
+        }
+    }
+
+    /**
+     * 根据id查询套餐信息
+     * @param id 套餐id
+     * @return 套餐信息
+     */
+    @RequestMapping("/findById")
+    public Result findById(Integer id) {
+        try {
+            Setmeal setmeal = setmealService.findById(id);
+            return new Result(true,MessageConstant.QUERY_SETMEAL_SUCCESS,setmeal);
+        } catch(Exception e) {
+            e.printStackTrace();
+            return new Result(false,MessageConstant.QUERY_SETMEAL_FAIL);
+        }
+    }
+
+    /**
+     * 根据套餐id查询对应检查组
+     * @param id 套餐id
+     * @return 查询结果：1.true/false 2.提示信息 3.存有所有检查组id的List集合
+     */
+    @RequestMapping("/findCheckGroupIds")
+    public Result findCheckGroupIds(Integer id) {
+        try {
+            List<Integer> checkGroupIds = setmealService.findCheckGroupIds(id);
+            return new Result(true,MessageConstant.QUERY_CHECKGROUP_SUCCESS,checkGroupIds);
+        } catch(Exception e) {
+            e.printStackTrace();
+            return new Result(false,MessageConstant.QUERY_CHECKGROUP_FAIL);
+        }
+    }
+
+    /**
+     * 编辑套餐
+     * 同时要更新redis集合数据，1.将旧图片名从DB集合中删除 2.新图片名存入DB集合
+     * @param setmeal 套餐信息
+     * @param checkgroupIds 套餐对应检查组id
+     * @return 执行结果
+     */
+    @RequestMapping("/edit")
+    public Result edit(@RequestBody Setmeal setmeal,Integer[] checkgroupIds,String oldImg) {
+//        System.out.println(setmeal.toString());
+//        System.out.println(Arrays.toString(checkgroupIds));
+//        System.out.println("old:" + oldImg);
+//        System.out.println("new:" + setmeal.getImg());
+        try {
+            setmealService.update(setmeal,checkgroupIds,oldImg);
+            return new Result(true,MessageConstant.EDIT_SETMEAL_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,MessageConstant.EDIT_SETMEAL_FAIL);
+        }
+
     }
 }
