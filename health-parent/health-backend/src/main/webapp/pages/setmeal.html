@@ -436,7 +436,7 @@
                 handleDelete(row) {
                     // alert(row.id);
                     //1.二次确认
-                    this.$confirm("确认删除当前套餐吗？","记录",{type:'warning'}).then(()=>{
+                    this.$confirm("确定删除当前套餐吗？","记录",{type:'warning'}).then(()=>{
                         //2.发送删除请求
                         axios.get("/setmeal/delete.do?id="+row.id+"&img="+row.img).then((resp)=>{
                             if(resp.data.flag) {

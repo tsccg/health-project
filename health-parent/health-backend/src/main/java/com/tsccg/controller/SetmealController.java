@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import redis.clients.jedis.JedisPool;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,6 +43,7 @@ public class SetmealController {
             //获取原始文件名
             String originalFilename = imgFile.getOriginalFilename();
             //截取后缀suffix .jpg
+            assert originalFilename != null;
             int lastIndexOf = originalFilename.lastIndexOf(".");
             String suffix = originalFilename.substring(lastIndexOf);
             //随机生成一个文件名 xxx + .jpg

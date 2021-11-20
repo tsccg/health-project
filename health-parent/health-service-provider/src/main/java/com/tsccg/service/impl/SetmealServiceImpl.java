@@ -77,7 +77,7 @@ public class SetmealServiceImpl implements SetmealService {
     @Override
     public void deleteById(Integer id,String img) {
         //1.将该套餐对应图片名从redis的数据库set集合中删除
-        this.deleteImgFormDB(img);
+        this.deleteImgFromDB(img);
         //2.删除关联表中对应的检查组
         this.deleteConnection(id);
         //3.删除套餐表中的记录
@@ -113,7 +113,7 @@ public class SetmealServiceImpl implements SetmealService {
     @Override
     public void update(Setmeal setmeal, Integer[] checkGroupIds,String oldImg) {
         //将旧图片从redis数据库集合中删除
-        this.deleteImgFormDB(oldImg);
+        this.deleteImgFromDB(oldImg);
         //将新图片添加到redis数据库集合中
         this.addImgToDB(setmeal.getImg());
 
@@ -131,7 +131,7 @@ public class SetmealServiceImpl implements SetmealService {
      * 从redis的DB集合中删除图片名
      * @param img 待删除图片名
      */
-    private void deleteImgFormDB(String img) {
+    private void deleteImgFromDB(String img) {
         jedisPool.getResource().srem(RedisConstant.SETMEAL_PIC_DB_RESOURCES,img);
     }
 

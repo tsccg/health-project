@@ -1,4 +1,4 @@
-package com.tsccg;
+package com.tsccg.qiniu;
 
 import com.google.gson.Gson;
 import com.qiniu.common.QiniuException;

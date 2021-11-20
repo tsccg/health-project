@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tsccg.dao.OrderSettingDao">
+    <!--根据日期查询记录条数-->
+    <select id="findCountByOrderDate" parameterType="java.util.Date" resultType="long">
+        select count(id) from t_ordersetting
+        where orderDate = #{orderDate}
+    </select>
+    <!--插入预约数据-->
+    <insert id="add" parameterType="com.tsccg.pojo.OrderSetting">
+        insert into t_ordersetting(orderDate,number,reservations)
+        values(#{orderDate},#{number},#{reservations})
+    </insert>
+    <!--根据日期更新预约数量-->
+    <update id="editNumberByOrderDate" parameterType="com.tsccg.pojo.OrderSetting">
+        update t_ordersetting
+        set number = #{number}
+        where orderDate = #{orderDate}
+    </update>
+</mapper>
