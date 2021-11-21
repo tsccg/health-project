@@ -3,6 +3,8 @@ package com.tsccg.dao;
 import com.tsccg.pojo.OrderSetting;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: TSCCG
@@ -27,4 +29,11 @@ public interface OrderSettingDao {
      * @param orderSetting 预约数据
      */
     void add(OrderSetting orderSetting);
+
+    /**
+     * 据月份查询对应的预约设置数据
+     * @param map start：2021-11-1  end：2021-11-31
+     * @return 该月的预约数据集合
+     */
+    List<OrderSetting> getOrderSettingByMonth(Map<String, String> map);
 }

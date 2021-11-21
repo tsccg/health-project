@@ -19,4 +19,9 @@
         set number = #{number}
         where orderDate = #{orderDate}
     </update>
+    <!--根据月份查询对应预约数据-->
+    <select id="getOrderSettingByMonth" parameterType="map" resultType="com.tsccg.pojo.OrderSetting">
+        select id,orderDate,number,reservations from t_ordersetting
+        where orderDate between #{start} and #{end}
+    </select>
 </mapper>

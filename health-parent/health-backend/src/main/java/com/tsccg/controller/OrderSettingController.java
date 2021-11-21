@@ -6,14 +6,13 @@ import com.tsccg.entity.Result;
 import com.tsccg.pojo.OrderSetting;
 import com.tsccg.service.OrderSettingService;
 import com.tsccg.utils.POIUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: TSCCG
@@ -39,13 +38,9 @@ public class OrderSettingController {
             //将解析数据进行整理，将字符串数组集合转换为OrderSetting对象集合
             List<OrderSetting> orderSettingList = new ArrayList<>();
             for (String[] string : strings) {
-                //日期
-                String date = string[0];
-                //可预约人数
-                String num = string[1];
-                //封装为OrderSetting对象
+                //将日期和可预约人数封装到为OrderSetting对象
                 OrderSetting orderSetting =
-                        new OrderSetting(new Date(date),Integer.parseInt(num));
+                        new OrderSetting(new Date(string[0]),Integer.parseInt(string[1]));
                 //放入List集合
                 orderSettingList.add(orderSetting);
             }
@@ -58,4 +53,44 @@ public class OrderSettingController {
         }
     }
 
+    /**
+     * 根据月份查询对应的预约设置数据
+     * @param date 查询条件：2021-11 yyyy-MM
+     * @return 预约设置信息
+     */
+    @RequestMapping("/getOrderSettingByMonth")
+    public Result getOrderSettingByMonth(String date) {
+        try {
+            /*
+            页面需要数据格式：
+                [
+                    { date: 1, number: 120, reservations: 100 },
+                    { date: 3, number: 120, reservations: 1 },
+                ]
+            OrderSetting属性不一致，不宜使用
+            可以使用Map集合，比较灵活
+            */
+            List<Map<String, Integer>> list = orderSettingService.getOrderSettingByMonth(date);
+            return new Result(true,MessageConstant.GET_ORDERSETTING_SUCCESS,list);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,MessageConstant.GET_ORDERSETTING_FAIL);
+        }
+    }
+
+    /**
+     * 根据日期编辑对应的可预约人数
+     * @param orderSetting 日期；可预约人数
+     * @return 执行结果
+     */
+    @RequestMapping("/editNumberByDate")
+    public Result editNumberByDate(@RequestBody OrderSetting orderSetting){
+        try {
+            orderSettingService.editNumberByDate(orderSetting);
+            return new Result(true,MessageConstant.ORDERSETTING_SUCCESS);
+        } catch(Exception e) {
+            e.printStackTrace();
+            return new Result(false,MessageConstant.ORDERSETTING_FAIL);
+        }
+    }
 }
