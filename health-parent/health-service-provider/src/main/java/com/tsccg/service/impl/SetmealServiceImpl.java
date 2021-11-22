@@ -9,11 +9,19 @@ import com.tsccg.entity.QueryPageBean;
 import com.tsccg.pojo.Setmeal;
 import com.tsccg.service.SetmealService;
 import com.tsccg.dao.SetmealDao;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import redis.clients.jedis.JedisPool;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +38,11 @@ public class SetmealServiceImpl implements SetmealService {
     private SetmealDao setmealDao;
     @Autowired
     private JedisPool jedisPool;
+    @Autowired
+    private FreeMarkerConfigurer freeMarkerConfigurer;
+    @Value("${out_put_path}")
+    private String outPutPath;//从属性配置文件中获取静态文件生成路径
+
     /**
      * 添加套餐 1.添加套餐信息 2.根据套餐id向关系表中添加对应检查组
      * @param setmeal 套餐信息
@@ -46,6 +59,81 @@ public class SetmealServiceImpl implements SetmealService {
         }
         //3.将存入数据库中的图片名称存入redis数据库的另一个set集合
         this.addImgToDB(setmeal.getImg());
+        /*
+            4.当添加套餐后需要生成静态页面
+                生成套餐列表页面
+                生成套餐详情页面(多个)
+         */
+        generateMobileStaticHtml();
+    }
+
+    private void generateMobileStaticHtml() {
+        //1.准备要填入的数据
+        List<Setmeal> setmealList = this.getAllSetmeal();
+        //2.生成套餐列表页面
+        generateMobileSetmealListHtml(setmealList);
+        //3.生成套餐详情页面(多个)
+        generateMobileSetmealDetailHtml(setmealList);
+    }
+
+    /**
+     * 生成套餐列表页面
+     * @param setmealList 当前所有套餐列表
+     */
+    private void generateMobileSetmealListHtml(List<Setmeal> setmealList) {
+        //1.封装map
+        Map<String,Object> dataMap = new HashMap<>();
+        dataMap.put("setmealList",setmealList);
+        //2.调用通用生成类
+        generateHtml("mobile_setmeal.ftl",
+                "m_setmeal.html",dataMap);
+    }
+
+    /**
+     * 生成套餐详情页面(多个)
+     * @param setmealList 当前所有套餐列表
+     */
+    private void generateMobileSetmealDetailHtml(List<Setmeal> setmealList) {
+        //遍历套餐列表
+        for (Setmeal setmeal : setmealList) {
+            //封装map
+            Map<String,Object> dataMap = new HashMap<>();
+            dataMap.put("setmeal",this.findDetailedMessageById(setmeal.getId()));
+            generateHtml("mobile_setmeal_detail.ftl",
+                    "m_setmeal_detail_"+setmeal.getId()+".html",
+                    dataMap);
+        }
+    }
+
+    /**
+     * 通用地生成静态页面
+     * @param templateName 模板名称
+     * @param htmlPageName 要生成的静态页面名称
+     * @param map 需要填入模板的数据
+     */
+    private void generateHtml(String templateName,String htmlPageName,Map<String,Object> map) {
+        //获取配置对象
+        Configuration configuration = freeMarkerConfigurer.getConfiguration();
+        Writer out = null;
+        try {
+            //获取模板对象
+            Template template = configuration.getTemplate(templateName);
+            //创建输出流
+            out = new FileWriter(new File(outPutPath + "/" + htmlPageName));
+            //填充数据并输出文件
+            template.process(map,out);
+        } catch (IOException | TemplateException e) {
+            e.printStackTrace();
+        } finally {
+            //关闭流
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     /**
@@ -83,8 +171,13 @@ public class SetmealServiceImpl implements SetmealService {
         this.deleteConnection(id);
         //3.删除套餐表中的记录
         setmealDao.deleteById(id);
+        /*
+            4.当添加套餐后需要生成静态页面
+                生成套餐列表页面
+                生成套餐详情页面(多个)
+         */
+        generateMobileStaticHtml();
     }
-
 
     /**
      * 根据id查询套餐信息
@@ -127,6 +220,12 @@ public class SetmealServiceImpl implements SetmealService {
         if(checkGroupIds != null) {
             this.setConnection(id,checkGroupIds);
         }
+        /*
+            4.当添加套餐后需要生成静态页面
+                生成套餐列表页面
+                生成套餐详情页面(多个)
+         */
+        generateMobileStaticHtml();
     }
 
     /**
