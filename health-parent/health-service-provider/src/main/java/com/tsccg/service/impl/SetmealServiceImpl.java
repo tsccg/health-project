@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import redis.clients.jedis.JedisPool;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -127,6 +128,29 @@ public class SetmealServiceImpl implements SetmealService {
             this.setConnection(id,checkGroupIds);
         }
     }
+
+    /**
+     * 获取所有套餐信息
+     * @return 保存有所有套餐信息的List集合
+     */
+    @Override
+    public List<Setmeal> getAllSetmeal() {
+        return setmealDao.getAllSetmeal();
+    }
+
+    /**
+     * 根据套餐id查询套餐详细信息：
+     *      1.套餐基本信息
+     *      2.套餐对应的所有检查组信息
+     *      3.每个检查组所对应的检查项信息
+     * @param id 套餐id
+     * @return 套餐详细信息
+     */
+    @Override
+    public Setmeal findDetailedMessageById(Integer id) {
+        return setmealDao.findDetailedMessageById(id);
+    }
+
     /**
      * 从redis的DB集合中删除图片名
      * @param img 待删除图片名

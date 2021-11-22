@@ -65,4 +65,11 @@
     <select id="findAll" resultType="com.tsccg.pojo.CheckItem">
         select id,code,name,sex,age,price,type,attention,remark from t_checkitem
     </select>
+
+    <!--根据检查组id查询对应的所有检查项id-->
+    <select id="findCheckItemById" parameterType="int" resultType="com.tsccg.pojo.CheckItem">
+        select id,code,name,sex,age,price,type,attention,remark from t_checkitem
+        where id
+        in (select checkitem_id from t_checkgroup_checkitem where checkgroup_id = #{id})
+    </select>
 </mapper>

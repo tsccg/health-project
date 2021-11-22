@@ -1,14 +1,14 @@
 //获取指定的URL参数值 http://localhost/pages/setmeal_detail.html?id=3&name=jack
 function getUrlParam(paraName) {
     var url = document.location.toString();
-    //alert(url);
+    // alert(url);
     var arrObj = url.split("?");
     if (arrObj.length > 1) {
         var arrPara = arrObj[1].split("&");
         var arr;
         for (var i = 0; i < arrPara.length; i++) {
             arr = arrPara[i].split("=");
-            if (arr != null && arr[0] == paraName) {
+            if (arr != null && arr[0] === paraName) {
                 return arr[1];
             }
         }

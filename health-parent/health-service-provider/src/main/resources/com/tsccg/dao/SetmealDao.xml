@@ -88,4 +88,36 @@
         </set>
         where id = #{id}
     </update>
+    <!--获取所有套餐信息-->
+    <select id="getAllSetmeal" resultType="com.tsccg.pojo.Setmeal">
+        select id,name,code,helpCode,sex,age,price,remark,attention,img from t_setmeal
+    </select>
+    
+    <!--根据套餐id查询套餐详细信息【包含套餐基本信息、检查组基本信息、检查项基本信息】-->
+    <resultMap id="baseResultMap" type="com.tsccg.pojo.Setmeal">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="code" property="code"/>
+        <result column="helpCode" property="helpCode"/>
+        <result column="sex" property="sex"/>
+        <result column="age" property="age"/>
+        <result column="price" property="price"/>
+        <result column="remark" property="remark"/>
+        <result column="attention" property="attention"/>
+        <result column="img" property="img"/>
+    </resultMap>
+    <resultMap id="findByIdResultMap"
+               type="com.tsccg.pojo.Setmeal" 
+               extends="baseResultMap">
+        <collection property="checkGroups"
+                    javaType="ArrayList"
+                    ofType="com.tsccg.pojo.CheckGroup"
+                    column="id"
+                    select="com.tsccg.dao.CheckGroupDao.findCheckGroupById">
+        </collection>
+    </resultMap>
+    <select id="findDetailedMessageById" parameterType="int" resultMap="findByIdResultMap">
+        select id,name,code,helpCode,sex,age,price,remark,attention,img from t_setmeal
+        where id = #{id}
+    </select>
 </mapper>

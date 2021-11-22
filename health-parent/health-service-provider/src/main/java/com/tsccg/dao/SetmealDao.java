@@ -57,4 +57,20 @@ public interface SetmealDao {
      * @param setmeal 套餐信息
      */
     void update(Setmeal setmeal);
+
+     /**
+     * 获取所有套餐信息
+     * @return 保存有所有套餐信息的List集合
+     */
+    List<Setmeal> getAllSetmeal();
+
+    /**
+     * 根据套餐id查询套餐详细信息：
+     *      1.套餐基本信息
+     *      2.套餐对应的所有检查组信息
+     *      3.每个检查组所对应的检查项信息
+     * @param id 套餐id
+     * @return 套餐详细信息
+     */
+    Setmeal findDetailedMessageById(Integer id);
 }

@@ -72,4 +72,31 @@
     <select id="findAll" resultType="com.tsccg.pojo.CheckGroup">
         select id,code,name,helpCode,sex,remark,attention from t_checkgroup
     </select>
+
+    <!--根据套餐id查询所有套餐详细信息【包含套餐基本信息和对应检查项信息】-->
+    <resultMap type="com.tsccg.pojo.CheckGroup" id="baseResultMap">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="code" property="code"/>
+        <result column="helpCode" property="helpCode"/>
+        <result column="sex" property="sex"/>
+        <result column="remark" property="remark"/>
+        <result column="attention" property="attention"/>
+    </resultMap>
+    <!--多对多映射-->
+    <resultMap id="findByIdResultMap"
+               type="com.tsccg.pojo.CheckGroup"
+               extends="baseResultMap">
+        <collection property="checkItems"
+                    javaType="ArrayList"
+                    ofType="com.tsccg.pojo.CheckItem"
+                    column="id"
+                    select="com.tsccg.dao.CheckItemDao.findCheckItemById">
+        </collection>
+    </resultMap>
+    <select id="findCheckGroupById" parameterType="int" resultMap="findByIdResultMap">
+        select id,code,name,helpCode,sex,remark,attention from t_checkgroup
+        where id
+        in (select checkgroup_id from t_setmeal_checkgroup where setmeal_id=#{id})
+    </select>
 </mapper>
