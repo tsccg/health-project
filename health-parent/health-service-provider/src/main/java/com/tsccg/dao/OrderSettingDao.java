@@ -33,7 +33,20 @@ public interface OrderSettingDao {
     /**
      * 据月份查询对应的预约设置数据
      * @param map start：2021-11-1  end：2021-11-31
-     * @return 该月的预约数据集合
+     * @return 该月的预约设置数据集合
      */
-    List<OrderSetting> getOrderSettingByMonth(Map<String, String> map);
+    List<OrderSetting> findOrderSettingByMonth(Map<String, String> map);
+
+    /**
+     * 根据用户预约日期查询预约设置
+     * @param orderDate 用户预约日期
+     * @return 当日的预约设置信息
+     */
+    OrderSetting findOrderSettingByDate(Date orderDate);
+
+    /**
+     * 根据预约日期更新已预约人数
+     * @param orderSetting 预约设置信息
+     */
+    void editReservationsByOrderDate(OrderSetting orderSetting);
 }

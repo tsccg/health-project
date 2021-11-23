@@ -25,12 +25,12 @@
             <ul class="list">
                 <#list setmealList as setmeal>
                     <li class="list-item">
-                        <a class="link-page" href="m_setmeal_detail_${setmeal.id}.html">
+                        <a class="link-page" href="setmeal_detail_${setmeal.id}.html">
                             <img class="img-object f-left"
-                                 src="http://r2b702v6g.hn-bkt.clouddn.com/${setmeal.img!}"
+                                 src="http://r2b702v6g.hn-bkt.clouddn.com/${setmeal.img}"
                                  alt="">
                             <div class="item-body">
-                                <h4 class="ellipsis item-title">${setmeal.name!}</h4>
+                                <h4 class="ellipsis item-title">${setmeal.name}</h4>
                                 <p class="ellipsis-more item-desc">${setmeal.remark!}</p>
                                 <p class="item-keywords">
                                     <span>

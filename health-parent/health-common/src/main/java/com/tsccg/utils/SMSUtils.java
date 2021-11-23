@@ -17,9 +17,9 @@ import com.aliyuncs.profile.IClientProfile;
 
 public class SMSUtils {
     //欢迎短信
-    public static final String WELCOME_CODE = "SMS_6805776";
+//    public static final String WELCOME_CODE = "SMS_6805776";
     //发送短信验证码
-    public static final String VALIDATE_CODE = "SMS_159620392";
+    public static final String VALIDATE_CODE = "SMS_6805776";
     //体检预约成功通知
     public static final String ORDER_NOTICE = "SMS_159771588";
 

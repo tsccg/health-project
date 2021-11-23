@@ -26,11 +26,11 @@
     <div class="contentBox">
         <div class="card">
             <div class="project-img">
-                <img src="http://r2b702v6g.hn-bkt.clouddn.com/${setmeal.img!}"
+                <img src="http://r2b702v6g.hn-bkt.clouddn.com/${setmeal.img}"
                      width="100%" height="100%" />
             </div>
             <div class="project-text">
-                <h4 class="tit">${setmeal.name!}</h4>
+                <h4 class="tit">${setmeal.name}</h4>
                 <p class="subtit">${setmeal.remark!}</p>
                 <p class="keywords">
                     <span>
@@ -44,7 +44,7 @@
                             </#if>
                         </#if>
                     </span>
-                    <span>${setmeal.age!}</span>
+                    <span>${setmeal.age}</span>
                 </p>
             </div>
         </div>
@@ -63,11 +63,11 @@
                     <ul class="table-list">
                         <#list setmeal.checkGroups as checkgroup>
                             <li class="table-item">
-                                <div class="item flex2">${checkgroup.name!}</div>
+                                <div class="item flex2">${checkgroup.name}</div>
                                 <div class="item flex3">
                                     <#list checkgroup.checkItems as checkitem>
                                         <label>
-                                            ${checkitem.name!}
+                                            ${checkitem.name}
                                         </label>
                                     </#list>
                                 </div>

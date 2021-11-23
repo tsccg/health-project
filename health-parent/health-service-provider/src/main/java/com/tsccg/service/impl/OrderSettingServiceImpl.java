@@ -58,7 +58,7 @@ public class OrderSettingServiceImpl implements OrderSettingService {
         //2021-11-31 (无论当前月是否是31天，都设置为31)
         map.put("end",date + "-31");
         //获取当月所有的预约数据，封装到OrderSetting列表里
-        List<OrderSetting> list = orderSettingDao.getOrderSettingByMonth(map);
+        List<OrderSetting> list = orderSettingDao.findOrderSettingByMonth(map);
         /*
         将查询到的数据转换为页面需要的数据格式
             页面需要数据格式：
@@ -86,13 +86,13 @@ public class OrderSettingServiceImpl implements OrderSettingService {
      */
     @Override
     public void editNumberByDate(OrderSetting orderSetting) {
-        //在进行更新前先查询数据库中是否已存在当前日期
+        //在进行更新前先查询数据库中当前日期是否已设置了
         long countByOrderDate =  this.findCountByOrderDate(orderSetting.getOrderDate());
         if (countByOrderDate > 0) {
-            //若已存在当前日期，则根据日期更新预约数量
+            //若当前日期已设置，则根据日期更新预约数量
             orderSettingDao.editNumberByOrderDate(orderSetting);
         } else {
-            //若不存在，则直接插入数据
+            //若当前日期未设置，则直接插入数据
             orderSettingDao.add(orderSetting);
         }
     }

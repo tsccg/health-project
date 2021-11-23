@@ -23,7 +23,7 @@
             <!-- 页面头部 -->
             <div class="top-header">
                 <span class="f-left"><i class="icon-back" onclick="history.go(-1)"></i></span>
-                <span class="center">传智健康</span>
+                <span class="center">TS健康</span>
                 <span class="f-right"><i class="icon-more"></i></span>
             </div>
             <!-- 页面内容 -->
@@ -66,8 +66,14 @@
                 orderInfo:{}
             },
             mounted(){
-                axios.post("/order/findById.do?id=" + id).then((response) => {
-                    this.orderInfo = response.data.data;
+                //发送ajax请求，根据预约id查询预约相关信息，用于页面展示
+                axios.post("/order/findById.do?id=" + id).then((resp) => {
+                    if (resp.data.flag) {
+                        this.orderInfo = resp.data.data;
+                    } else {
+                        this.$message.error(resp.data.message);
+                    }
+
                 });
             }
         });

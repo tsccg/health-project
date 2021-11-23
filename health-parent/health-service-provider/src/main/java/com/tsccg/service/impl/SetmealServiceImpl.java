@@ -100,7 +100,7 @@ public class SetmealServiceImpl implements SetmealService {
             Map<String,Object> dataMap = new HashMap<>();
             dataMap.put("setmeal",this.findDetailedMessageById(setmeal.getId()));
             generateHtml("mobile_setmeal_detail.ftl",
-                    "m_setmeal_detail_"+setmeal.getId()+".html",
+                    "setmeal_detail_"+setmeal.getId()+".html",
                     dataMap);
         }
     }
