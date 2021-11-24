@@ -40,14 +40,14 @@
                     <div class="input-row">
                         <label>验证码</label>
                         <div class="loginInput">
-                            <input v-model="loginInfo.validateCode" style="width:80%" id='password' type="password" placeholder="请输入验证码">
+                            <input v-model="loginInfo.validateCode" style="width:80%" id='password' type="text" placeholder="请输入验证码">
                         </div>
                     </div>
                     <div class="input-row" style="font-size: 12px">
-                        <input type="checkbox" checked>
-                        阅读并同意《传智健康用户协议》《传智健康隐私条款》
+                        <input type="checkbox" v-model="checked">
+                        阅读并同意《TS健康用户协议》《TS健康隐私条款》
                     </div>
-                    <div class="btn yes-btn"><a @click="login()" href="#">登录</a></div>
+                    <div class="btn yes-btn" @click="login()">登录</div>
                 </form>
             </div>
         </div>
@@ -57,7 +57,11 @@
         var vue = new Vue({
             el:'#app',
             data:{
-                loginInfo:{}//登录信息
+                checked:true,
+                loginInfo:{
+                    telephone: null,
+                    validateCode:null
+                }//登录信息
             },
             methods:{
                 //发送验证码
@@ -69,7 +73,7 @@
                     }
                     validateCodeButton = $("#validateCodeButton")[0];
                     clock = window.setInterval(doLoop, 1000); //一秒执行一次
-                    axios.post("/validateCode/send4Login.do?telephone=" + telephone).then((response) => {
+                    axios.post("/validateCode/send6Login.do?telephone=" + telephone).then((response) => {
                         if(!response.data.flag){
                             //验证码发送失败
                             this.$message.error('验证码发送失败，请检查手机号输入是否正确');
@@ -78,18 +82,24 @@
                 },
                 //登录
                 login(){
+                    //检验手机号格式
                     var telephone = this.loginInfo.telephone;
                     if (!checkTelephone(telephone)) {
                         this.$message.error('请输入正确的手机号');
                         return false;
                     }
-                    axios.post("/login/check.do",this.loginInfo).then((response) => {
-                        if(response.data.flag){
-                            //登录成功,跳转到index.html
-                            window.location.href="index.html";
-                        }else{
-                            //失败，提示失败信息
-                            this.$message.error(response.data.message);
+                    //必须同意用户协议和隐私条款
+                    if (!this.checked) {
+                        this.$message.error('请同意《TS健康用户协议》《TS健康隐私条款》');
+                        return false;
+                    }
+                    //发送ajax请求,将表单数据提交到后台进行登录处理
+                    axios.post("/member/login.do",this.loginInfo).then((resp)=>{
+                        if (resp.data.flag) {
+                            //登录成功，进入会员页面
+                            window.location.href = "member.html";
+                        } else {
+                            this.$message.error(resp.data.message);
                         }
                     });
                 }

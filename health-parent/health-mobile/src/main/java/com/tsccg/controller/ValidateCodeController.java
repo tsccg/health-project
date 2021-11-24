@@ -46,4 +46,29 @@ public class ValidateCodeController {
                 300, validateCode);
         return new Result(true,MessageConstant.SEND_VALIDATECODE_SUCCESS);
     }
+
+    /**
+     * 用户快速登录时发送短信验证码
+     * @param telephone 用户电话号码
+     * @return
+     */
+    @RequestMapping("/send6Login")
+    public Result send6Login(String telephone){
+        //随机生成6位短信验证码
+        String validateCode = ValidateCodeUtils.generateValidateCode4String(6);
+        try {
+            //将验证码发送给用户
+//            SMSUtils.sendShortMessage(SMSUtils.VALIDATE_CODE,telephone,validateCode);
+            System.out.println("给用户发送的验证码：" + validateCode);
+        } catch (Exception e) {
+            //短信验证码发送失败
+            e.printStackTrace();
+            return new Result(false, MessageConstant.SEND_VALIDATECODE_FAIL);
+        }
+        //将验证码存入redis中，时效5分钟   key：15712345678-002
+        jedisPool.getResource().setex(
+                telephone + "-" + RedisConstant.SENDTYPE_LOGIN,
+                300, validateCode);
+        return new Result(true,MessageConstant.SEND_VALIDATECODE_SUCCESS);
+    }
 }
