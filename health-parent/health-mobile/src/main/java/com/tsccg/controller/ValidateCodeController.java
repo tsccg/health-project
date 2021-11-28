@@ -1,10 +1,9 @@
 package com.tsccg.controller;
 
-import com.aliyuncs.exceptions.ClientException;
 import com.tsccg.constant.MessageConstant;
 import com.tsccg.constant.RedisConstant;
 import com.tsccg.entity.Result;
-import com.tsccg.utils.SMSUtils;
+import com.tsccg.utils.SMSTXUtils;
 import com.tsccg.utils.ValidateCodeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,10 +29,11 @@ public class ValidateCodeController {
     @RequestMapping("/send4Order")
     public Result send4Order(String telephone){
         //随机生成短信验证码
-        String validateCode = ValidateCodeUtils.generateValidateCode4String(4);
+        String validateCode = ValidateCodeUtils.generateValidateCode(4).toString();
         try {
             //将验证码发送给用户
-//            SMSUtils.sendShortMessage(SMSUtils.VALIDATE_CODE,telephone,validateCode);
+            String[] params = {validateCode,"5"};
+            SMSTXUtils.sendShortMessage(SMSTXUtils.COMMON_VALIDATE_CODE,telephone,params);
             System.out.println("给用户发送的验证码：" + validateCode);
         } catch (Exception e) {
             //短信验证码发送失败
@@ -55,10 +55,11 @@ public class ValidateCodeController {
     @RequestMapping("/send6Login")
     public Result send6Login(String telephone){
         //随机生成6位短信验证码
-        String validateCode = ValidateCodeUtils.generateValidateCode4String(6);
+        String validateCode = ValidateCodeUtils.generateValidateCode(6).toString();
         try {
             //将验证码发送给用户
-//            SMSUtils.sendShortMessage(SMSUtils.VALIDATE_CODE,telephone,validateCode);
+            String[] params = {validateCode,"5"};
+            SMSTXUtils.sendShortMessage(SMSTXUtils.LOGIN_VALIDATE_CODE,telephone,params);
             System.out.println("给用户发送的验证码：" + validateCode);
         } catch (Exception e) {
             //短信验证码发送失败

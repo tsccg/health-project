@@ -4,9 +4,9 @@
         <!-- 页面meta -->
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=firefox">
-        <title>传智健康</title>
-        <meta name="description" content="传智健康">
-        <meta name="keywords" content="传智健康">
+        <title>TS健康</title>
+        <meta name="description" content="TS健康">
+        <meta name="keywords" content="TS健康">
         <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
         <!-- 引入样式 -->
         <link rel="stylesheet" href="../plugins/elementui/index.css">
@@ -204,6 +204,7 @@
     <script src="../plugins/elementui/index.js"></script>
     <script type="text/javascript" src="../js/jquery.min.js"></script>
     <script src="../js/axios-0.18.0.js"></script>
+    <script src="../js/showMessage.js"></script>
     <script>
         var vue = new Vue({
             el: '#app',
@@ -228,6 +229,17 @@
                 this.findPage();
             },
             methods: {
+                //权限不足提示
+                showMessage(resp){
+                    if(resp == 'Error: Request failed with status code 403'){
+                        //权限不足
+                        this.$message.error('无访问权限');
+                        return;
+                    }else{
+                        this.$message.error('未知错误');
+                        return;
+                    }
+                },
                 //编辑
                 handleEdit() {
                     //1.表单校验
@@ -245,6 +257,8 @@
                                     //编辑失败，弹出失败提示信息
                                     this.$message.error(resp.data.message);
                                 }
+                            }).catch((resp)=>{
+                                this.showMessage(resp);
                             }).finally(()=>{
                                 //无论编辑成功与否，执行分页查询
                                 this.findPage();
@@ -281,13 +295,15 @@
                                     //弹出失败提示窗口
                                     this.$message.error(resp.data.message);
                                 }
-                            })
+                            }).catch((resp)=>{
+                                this.showMessage(resp);
+                            });
                         } else {
                             //如果不通过，弹出提示框
                             this.$message.error('表单数据校验失败，请检查你的输入信息是否正确！');
                             return false;
                         }
-                    })
+                    });
                 },
                 //分页查询
                 findPage() {
@@ -301,7 +317,9 @@
                         //将查询到的数据渲染到页面上
                         this.pagination.total = resp.data.total;
                         this.dataList = resp.data.rows;
-                    })
+                    }).catch((resp)=>{
+                        this.showMessage(resp);
+                    });
                 },
                 _findPage() {
                     this.pagination.currentPage = 1;
@@ -328,7 +346,9 @@
                         } else{
                             this.$message.error(resp.data.message);
                         }
-                    })
+                    }).catch((resp)=>{
+                        this.showMessage(resp);
+                    });
                 },
                 //切换页码
                 handleCurrentChange(currentPage) {
@@ -352,7 +372,9 @@
                             } else {
                                 this.$message.error(resp.data.message);
                             }
-                        })
+                        }).catch((resp)=>{
+                            this.showMessage(resp);
+                        });
                     }).catch(()=>{
                         // alert("用户点击了取消按钮")
                         this.$message("操作已取消");

@@ -10,6 +10,7 @@ import com.tsccg.pojo.Setmeal;
 import com.tsccg.service.SetmealService;
 import com.tsccg.utils.QiniuUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import redis.clients.jedis.JedisPool;
@@ -65,6 +66,7 @@ public class SetmealController {
      * @param checkgroupIds 套餐对应检查组id数组
      * @return 执行结果
      */
+    @PreAuthorize("hasAuthority('SETMEAL_ADD')")
     @RequestMapping("/add")
     public Result add(@RequestBody Setmeal setmeal,Integer[] checkgroupIds) {
         try {
@@ -81,6 +83,7 @@ public class SetmealController {
      * @param queryPageBean 查询条件
      * @return 当前页数据
      */
+    @PreAuthorize("hasAuthority('SETMEAL_QUERY')")
     @RequestMapping("/findPage")
     public PageResult findPage(@RequestBody QueryPageBean queryPageBean) {
         return setmealService.findPage(queryPageBean);
@@ -92,6 +95,7 @@ public class SetmealController {
      * @param img 套餐对应图片名称
      * @return 执行结果
      */
+    @PreAuthorize("hasAuthority('SETMEAL_DELETE')")
     @RequestMapping("/delete")
     public Result delete(Integer id,String img) {
 //        System.out.println(id);
@@ -110,6 +114,7 @@ public class SetmealController {
      * @param id 套餐id
      * @return 套餐信息
      */
+    @PreAuthorize("hasAuthority('SETMEAL_QUERY')")
     @RequestMapping("/findById")
     public Result findById(Integer id) {
         try {
@@ -126,6 +131,7 @@ public class SetmealController {
      * @param id 套餐id
      * @return 查询结果：1.true/false 2.提示信息 3.存有所有检查组id的List集合
      */
+    @PreAuthorize("hasAuthority('SETMEAL_QUERY')")
     @RequestMapping("/findCheckGroupIds")
     public Result findCheckGroupIds(Integer id) {
         try {
@@ -144,6 +150,7 @@ public class SetmealController {
      * @param checkgroupIds 套餐对应检查组id
      * @return 执行结果
      */
+    @PreAuthorize("hasAuthority('SETMEAL_Edit')")
     @RequestMapping("/edit")
     public Result edit(@RequestBody Setmeal setmeal,Integer[] checkgroupIds,String oldImg) {
 //        System.out.println(setmeal.toString());

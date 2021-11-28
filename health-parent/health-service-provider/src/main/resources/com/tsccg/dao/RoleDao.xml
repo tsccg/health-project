@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tsccg.dao.RoleDao">
+    <!--根据用户Id查询关联的角色-->
+    <select id="findByUserId" parameterType="int" resultType="com.tsccg.pojo.Role">
+        select r.id,r.name,r.keyword,r.description
+        from t_role r
+        join t_user_role ur
+        on r.id = ur.role_id
+        where ur.user_id = #{user_id}
+    </select>
+</mapper>

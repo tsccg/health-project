@@ -9,6 +9,7 @@ import com.tsccg.entity.Result;
 import com.tsccg.pojo.CheckGroup;
 import com.tsccg.pojo.CheckItem;
 import com.tsccg.service.CheckGroupService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,6 +37,7 @@ public class CheckGroupController {
      * @param checkGroup 检查组基本数据
      * @return 返回执行结果
      */
+    @PreAuthorize("hasAuthority('CHECKGROUP_ADD')")
     @RequestMapping("/add")
     public Result add(@RequestBody CheckGroup checkGroup,Integer[] checkItemIds){
         try {
@@ -55,6 +57,7 @@ public class CheckGroupController {
      * @param queryPageBean 分页查询条件： 1.当前页码 2.每页展示数据条数 3.查询条件
      * @return 返回分页结果：1.总记录条数 2.当前页的所有记录
      */
+    @PreAuthorize("hasAuthority('CHECKGROUP_QUERY')")
     @RequestMapping("/findPage")
     public PageResult findPage(@RequestBody QueryPageBean queryPageBean) {
         return checkGroupService.pageQuery(queryPageBean);
@@ -65,6 +68,7 @@ public class CheckGroupController {
      * @param id 待删除记录id
      * @return 删除结果
      */
+    @PreAuthorize("hasAuthority('CHECKGROUP_DELETE')")
     @RequestMapping("/delete")
     public Result delete(Integer id) {
         try{
@@ -80,6 +84,7 @@ public class CheckGroupController {
      * @param id 检查组id
      * @return 返回查询结果及检查组数据
      */
+    @PreAuthorize("hasAuthority('CHECKGROUP_QUERY')")
     @RequestMapping("/findById")
     public Result findById(Integer id) {
         try {
@@ -95,6 +100,7 @@ public class CheckGroupController {
      * @param id 检查组id
      * @return 查询结果：1.true/false 2.提示信息 3.存有所有检查项id的List集合
      */
+    @PreAuthorize("hasAuthority('CHECKGROUP_QUERY')")
     @RequestMapping("/findCheckItemIds")
     public Result findCheckItemIds(Integer id) {
         try {
@@ -111,6 +117,7 @@ public class CheckGroupController {
      * @param checkItemIds 检查组对应检查项id
      * @return 编辑执行结果
      */
+    @PreAuthorize("hasAuthority('CHECKGROUP_EDIT')")
     @RequestMapping("/edit")
     public Result edit(@RequestBody CheckGroup checkGroup,Integer[] checkItemIds) {
         try {
@@ -125,6 +132,7 @@ public class CheckGroupController {
      * 查询所有检查组
      * @return 返回装有所有检查组的List集合
      */
+    @PreAuthorize("hasAuthority('CHECKGROUP_QUERY')")
     @RequestMapping("/findAll")
     public Result findAll() {
         try{

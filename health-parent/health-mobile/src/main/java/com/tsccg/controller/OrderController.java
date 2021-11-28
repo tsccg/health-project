@@ -1,17 +1,15 @@
 package com.tsccg.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.aliyuncs.exceptions.ClientException;
 import com.tsccg.constant.MessageConstant;
 import com.tsccg.constant.RedisConstant;
 import com.tsccg.entity.Result;
 import com.tsccg.pojo.Order;
 import com.tsccg.service.OrderService;
-import com.tsccg.utils.SMSUtils;
+import com.tsccg.utils.SMSTXUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import redis.clients.jedis.JedisPool;
 
@@ -63,7 +61,8 @@ public class OrderController {
     //3.预约成功，发送短信通知
         if (result.isFlag()) {
             try {
-//                SMSUtils.sendShortMessage(SMSUtils.ORDER_NOTICE,telephone,map.get("orderDate"));
+                String[] params = {map.get("name"),map.get("orderDate"),"南阳中心医院"};
+                SMSTXUtils.sendShortMessage(SMSTXUtils.ORDER_SUCCESS_NOTICE,telephone,params);
                 System.out.println("发送预约成功短信通知");
             } catch (Exception e) {
                 e.printStackTrace();
