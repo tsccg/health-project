@@ -31,6 +31,9 @@ public class SMSTXUtils {
     public static final String LOGIN_VALIDATE_CODE = "1215708";
     //通用验证码模板：1.验证码 2.有效时间
     public static final String COMMON_VALIDATE_CODE = "1217279";
+    //电话号码
+//    private static final String telephone = "15737258296";
+//    private static final String telephone = "17633926134";
 
     /**
      * 发送短信
