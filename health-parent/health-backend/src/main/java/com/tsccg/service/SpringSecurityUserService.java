@@ -43,14 +43,18 @@ public class SpringSecurityUserService implements UserDetailsService {
         List<GrantedAuthority> list = new ArrayList<>();
         //获取当前用户对应的所有角色并遍历
         Set<Role> roles = user.getRoles();
-        for (Role role : roles) {
-            //授予角色
-            list.add(new SimpleGrantedAuthority(role.getKeyword()));
-            //获取当前角色对应所有权限并遍历
-            Set<Permission> permissions = role.getPermissions();
-            for (Permission permission : permissions) {
-                //授予权限
-                list.add(new SimpleGrantedAuthority(permission.getKeyword()));
+        if (roles != null && roles.size() > 0) {
+            for (Role role : roles) {
+                //授予角色
+                list.add(new SimpleGrantedAuthority(role.getKeyword()));
+                //获取当前角色对应所有权限并遍历
+                Set<Permission> permissions = role.getPermissions();
+                if (permissions != null && permissions.size() > 0) {
+                    for (Permission permission : permissions) {
+                        //授予权限
+                        list.add(new SimpleGrantedAuthority(permission.getKeyword()));
+                    }
+                }
             }
         }
         //3.将从数据库中查出的用户名、加密密码、用户角色、用户权限封装到Spring Security框架提供的User类中，

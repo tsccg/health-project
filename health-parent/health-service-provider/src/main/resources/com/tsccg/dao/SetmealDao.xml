@@ -120,4 +120,15 @@
         select id,name,code,helpCode,sex,age,price,remark,attention,img from t_setmeal
         where id = #{id}
     </select>
+
+    <!--查询所有套餐预约数据
+        [{name:"套餐1",value:100},{name:"套餐2",value:200}...]
+    -->
+    <select id="findSetmealCount" resultType="map">
+        select s.name,count(o.setmeal_id) as value
+        from t_setmeal s
+        left join t_order o
+        on s.id = o.setmeal_id
+        group by s.name
+    </select>
 </mapper>

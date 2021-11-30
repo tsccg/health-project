@@ -5,6 +5,7 @@ import com.tsccg.entity.QueryPageBean;
 import com.tsccg.pojo.Setmeal;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: TSCCG
@@ -66,4 +67,10 @@ public interface SetmealService {
      * @return 套餐详细信息
      */
     Setmeal findDetailedMessageById(Integer id);
+
+    /**
+     * 查询所有套餐预约数据
+     * @return [{name:"套餐1",value:100},{name:"套餐2",value:200}...]
+     */
+    List<Map<String, Object>> findSetmealCount();
 }

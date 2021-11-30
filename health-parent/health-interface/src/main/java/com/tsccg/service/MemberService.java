@@ -2,6 +2,9 @@ package com.tsccg.service;
 
 import com.tsccg.pojo.Member;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @Author: TSCCG
  * @Date: 2021/11/24 15:17
@@ -19,4 +22,11 @@ public interface MemberService {
      * @param member 会员信息
      */
     void add(Member member);
+
+    /**
+     * 根据月份查询对应的会员数量
+     * @param months 月份列表，往前12个月份
+     * @return 每个月份对应的会员数量
+     */
+    List<Integer> findMemberCountByMonths(List<String> months);
 }

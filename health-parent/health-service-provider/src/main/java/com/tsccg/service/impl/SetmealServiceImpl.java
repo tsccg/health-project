@@ -251,6 +251,15 @@ public class SetmealServiceImpl implements SetmealService {
     }
 
     /**
+     * 查询所有套餐预约数据
+     * @return [{name:"套餐1",value:100},{name:"套餐2",value:200}...]
+     */
+    @Override
+    public List<Map<String, Object>> findSetmealCount() {
+        return setmealDao.findSetmealCount();
+    }
+
+    /**
      * 从redis的DB集合中删除图片名
      * @param img 待删除图片名
      */

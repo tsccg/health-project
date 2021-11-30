@@ -8,6 +8,10 @@ import com.tsccg.utils.MD5Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @Author: TSCCG
  * @Date: 2021/11/24 15:32
@@ -32,4 +36,22 @@ public class MemberServiceImpl implements MemberService{
         }
         memberDao.add(member);
     }
+
+    /**
+     * 根据月份查询对应的会员数量
+     * @param months 月份列表，往前12个月份
+     * @return 每个月份对应的会员数量
+     */
+    @Override
+    public List<Integer> findMemberCountByMonths(List<String> months) {
+        List<Integer> memberCounts = new ArrayList<>();
+        for (String month : months) {
+            String date = month+".31";
+            Integer memberCount = memberDao.findMemberCountBeforeDate(date);
+            memberCounts.add(memberCount);
+        }
+        return memberCounts;
+    }
+
+
 }
