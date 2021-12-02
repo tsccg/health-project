@@ -1,13 +1,16 @@
 package com.tsccg.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.sun.tools.internal.xjc.addon.locator.SourceLocationAddOn;
 import com.tsccg.constant.MessageConstant;
 import com.tsccg.entity.Result;
 import com.tsccg.service.MemberService;
 import com.tsccg.service.ReportService;
 import com.tsccg.service.SetmealService;
-import com.tsccg.utils.DateUtils;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -174,6 +177,9 @@ public class ReportController {
         }
     }
 
+    /**
+     * 导出Excel文件
+     */
     @RequestMapping("/exportBusinessReport")
     public Result exportBusinessReport(HttpServletRequest request, HttpServletResponse response) throws Exception {
         ServletOutputStream out = null;
@@ -262,6 +268,52 @@ public class ReportController {
             }
             if (excel != null) {
                 excel.close();
+            }
+        }
+
+    }
+    /**
+     * 导出PDF文件
+     */
+    @RequestMapping("/exportBusinessReport4PDF")
+    public Result exportBusinessReport4PDF(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        ServletOutputStream out = null;
+        try {
+            //远程调用报表服务获取报表数据
+            Map<String, Object> businessReport = reportService.getBusinessReport();
+            List<Map<String,Object>> hotSetmeal = (List<Map<String,Object>>) businessReport.get("hotSetmeals");
+
+            //动态获取PDF模板文件绝对磁盘路径
+            String jrxmlPath = request.getSession().getServletContext()
+                    .getRealPath("template") + File.separator + "health_business3.jrxml";
+            String jasperPath = request.getSession().getServletContext()
+                    .getRealPath("template") + File.separator + "health_business3.jasper";
+            //编译模板
+            JasperCompileManager.compileReportToFile(jrxmlPath, jasperPath);
+            //填充数据---使用JavaBean数据源方式填充
+            JasperPrint jasperPrint =
+                    JasperFillManager.fillReport(jasperPath,businessReport,
+                            new JRBeanCollectionDataSource(hotSetmeal));
+
+            //通过输出流进行文件下载,基于浏览器作为客户端进行下载
+            out = response.getOutputStream();
+            //设置格式
+            //"application/pdf"：代表PDF文件类型
+            response.setContentType("application/pdf");
+            //指定以附件形式进行下载
+            response.setHeader("content-Disposition", "attachment;filename=report.pdf");
+
+            //输出文件
+            JasperExportManager.exportReportToPdfStream(jasperPrint,out);
+            out.flush();
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,MessageConstant.GET_BUSINESS_REPORT_FAIL);
+        } finally {
+            //关闭资源
+            if (out != null) {
+                out.close();
             }
         }
 
