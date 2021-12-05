@@ -89,4 +89,52 @@
         order by setmeal_count desc
         limit 0,3
     </select>
+    <!--分页查询-->
+    <select id="findOrdersPage" parameterType="string" resultType="map">
+        select
+            o.id,o.orderDate,o.orderType,o.orderStatus,
+            m.fileNumber,m.name,m.phoneNumber,
+            a.addressName,
+            s.name setmealName
+        from t_order o
+        join t_member m
+        on o.member_id = m.id
+        left join t_address a
+        on o.address_id = a.id
+        join t_setmeal s
+        on o.setmeal_id = s.id
+        <if test="value != null and value.length > 0">
+            where m.fileNumber like CONCAT('%',#{value},'%') or m.name like CONCAT('%',#{value},'%') or m.phoneNumber like CONCAT('%',#{value},'%')
+        </if>
+    </select>
+    <!--修改预约状态-->
+    <update id="editOrderStatus" parameterType="com.tsccg.pojo.Order">
+        update t_order
+        set orderStatus = #{orderStatus}
+        where id = #{id}
+    </update>
+    <!--根据id删除预约记录-->
+    <delete id="deleteOrderById" parameterType="int">
+        delete from t_order where id = #{id}
+    </delete>
+    <!--根据id回显预约基本信息
+    1.name 2.telephone 3.orderDate 4.birthday 5.sex 6.age 7.idCard
+    -->
+    <select id="findById" parameterType="int" resultType="map">
+        select o.id,o.orderDate,m.name,m.phoneNumber telephone,m.birthday,m.sex,m.idCard
+        from t_order o
+        join t_member m
+        on o.member_id = m.id
+        where o.id = #{id}
+    </select>
+    <!--根据预约id查询对应的套餐id-->
+    <select id="findSetmealIds" parameterType="int" resultType="int">
+        select setmeal_id from t_order where id = #{id}
+    </select>
+    <!--修改预约数据-->
+    <update id="editOrder" parameterType="com.tsccg.pojo.Order">
+        update t_order
+        set member_id=#{memberId},orderDate=#{orderDate},setmeal_id=#{setmealId}
+        where id=#{id}
+    </update>
 </mapper>

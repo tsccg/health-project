@@ -15,8 +15,8 @@ import com.tencentcloudapi.sms.v20190711.models.SendSmsResponse;
  */
 public class SMSTXUtils {
     //鉴权
-    private static final String secretId = "FSAKIDxkGXZLq52lDOIwJPEn7ByVmmVx94i5D3";
-    private static final String secretKey = "bvylHWTBcnhLhma7NM4VfY9UZOwDCvObFS";
+    private static final String secretId = "AKIDxkGXZLq52lDOIwJPEn7ByVmmVx94i5D3";
+    private static final String secretKey = "bvylHWTBcnhLhma7NM4VfY9UZOwDCvOb";
     //短信应用id
     /* 短信应用ID: 短信SdkAppId在 [短信控制台] 添加应用后生成的实际SdkAppId，示例如1400006666 */
     private static final String APP_ID = "1400602573";

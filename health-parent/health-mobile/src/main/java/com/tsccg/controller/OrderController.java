@@ -73,12 +73,12 @@ public class OrderController {
     }
 
     /**
-     * 根据预约记录id查询对应的预约信息
+     * 预约成功回显：根据预约记录id查询对应的预约信息
      * @param id 预约记录id
      * @return 预约信息
      */
-    @RequestMapping("/findById")
-    public Result findById(Integer id) {
+    @RequestMapping("/findById4Detail")
+    public Result findById4Detail(Integer id) {
         /*
             {
                 member:体检人姓名,
@@ -88,7 +88,7 @@ public class OrderController {
             }
          */
         try {
-            Map map = orderService.findById(id);
+            Map map = orderService.findById4Detail(id);
             return new Result(true,MessageConstant.QUERY_ORDER_SUCCESS,map);
         } catch (Exception e) {
             e.printStackTrace();

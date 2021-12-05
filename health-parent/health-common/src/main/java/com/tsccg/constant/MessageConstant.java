@@ -59,6 +59,12 @@ public class MessageConstant {
     public static final String HAS_ORDERED = "已经完成预约，不能重复预约";
     public static final String ORDER_SUCCESS = "预约成功";
     public static final String ORDER_FAIL = "预约失败";
+    public static final String DELETE_ORDER_SUCCESS = "取消预约成功";
+    public static final String DELETE_ORDER_FAIL = "取消预约失败";
+    public static final String EDIT_ORDER_SUCCESS = "修改预约数据成功";
+    public static final String EDIT_ORDER_FAIL = "修改预约数据失败";
+    public static final String EDIT_ORDER_STATUS_SUCCESS = "修改预约状态成功";
+    public static final String EDIT_ORDER_STATUS_FAIL = "修改预约状态失败";
     public static final String GET_USERNAME_SUCCESS = "获取当前登录用户名称成功";
     public static final String GET_USERNAME_FAIL = "获取当前登录用户名称失败";
     public static final String GET_MENU_SUCCESS = "获取当前登录用户菜单成功";

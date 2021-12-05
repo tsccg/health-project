@@ -97,4 +97,5 @@ public class OrderSettingController {
             return new Result(false,MessageConstant.ORDERSETTING_FAIL);
         }
     }
+
 }

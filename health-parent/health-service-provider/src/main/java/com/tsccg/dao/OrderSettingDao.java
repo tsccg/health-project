@@ -1,5 +1,7 @@
 package com.tsccg.dao;
 
+import com.github.pagehelper.Page;
+import com.tsccg.pojo.Order;
 import com.tsccg.pojo.OrderSetting;
 
 import java.util.Date;
@@ -49,4 +51,6 @@ public interface OrderSettingDao {
      * @param orderSetting 预约设置信息
      */
     void editReservationsByOrderDate(OrderSetting orderSetting);
+
+
 }

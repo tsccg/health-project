@@ -33,7 +33,7 @@ public class ValidateCodeController {
         try {
             //将验证码发送给用户
             String[] params = {validateCode,"5"};
-            SMSTXUtils.sendShortMessage(SMSTXUtils.COMMON_VALIDATE_CODE,telephone,params);
+//            SMSTXUtils.sendShortMessage(SMSTXUtils.COMMON_VALIDATE_CODE,telephone,params);
             System.out.println("给用户发送的验证码：" + validateCode);
         } catch (Exception e) {
             //短信验证码发送失败
@@ -59,7 +59,7 @@ public class ValidateCodeController {
         try {
             //将验证码发送给用户
             String[] params = {validateCode,"5"};
-            SMSTXUtils.sendShortMessage(SMSTXUtils.LOGIN_VALIDATE_CODE,telephone,params);
+//            SMSTXUtils.sendShortMessage(SMSTXUtils.LOGIN_VALIDATE_CODE,telephone,params);
             System.out.println("给用户发送的验证码：" + validateCode);
         } catch (Exception e) {
             //短信验证码发送失败

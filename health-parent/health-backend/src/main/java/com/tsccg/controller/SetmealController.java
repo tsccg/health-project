@@ -166,4 +166,19 @@ public class SetmealController {
         }
 
     }
+
+    /**
+     * 获取所有套餐列表
+     * @return
+     */
+    @RequestMapping("/findAll")
+    public Result findAll() {
+        try {
+            List<Setmeal> setmealList = setmealService.getAllSetmeal();
+            return new Result(true,MessageConstant.QUERY_SETMEALLIST_SUCCESS,setmealList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,MessageConstant.QUERY_SETMEALLIST_FAIL);
+        }
+    }
 }

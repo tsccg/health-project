@@ -67,7 +67,7 @@
             },
             mounted(){
                 //发送ajax请求，根据预约id查询预约相关信息，用于页面展示
-                axios.post("/order/findById.do?id=" + id).then((resp) => {
+                axios.post("/order/findById4Detail.do?id=" + id).then((resp) => {
                     if (resp.data.flag) {
                         this.orderInfo = resp.data.data;
                     } else {
