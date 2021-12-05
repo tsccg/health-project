@@ -36,7 +36,6 @@ public class LocalOrderController {
     public Result submit(@RequestBody Map<String,String> map,Integer[] setmealIds) {
 //        System.out.println("map" + map);
 //        System.out.println("setmealIds" + Arrays.toString(setmealIds));
-        System.out.println("test1");
         Result result = null;
         try {
             /*
