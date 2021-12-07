@@ -43,6 +43,9 @@ public class MessageConstant {
     public static final String DELETE_MEMBER_SUCCESS = "删除会员成功";
     public static final String EDIT_MEMBER_FAIL = "编辑会员失败";
     public static final String EDIT_MEMBER_SUCCESS = "编辑会员成功";
+    public static final String QUERY_MEMBER_SUCCESS = "查询会员成功";
+    public static final String QUERY_MEMBER_FAIL = "查询会员失败";
+    public static final String HAS_ADD = "已经完成注册，不能重复注册";
     public static final String TELEPHONE_VALIDATECODE_NOTNULL = "手机号和验证码都不能为空";
     public static final String LOGIN_SUCCESS = "登录成功";
     public static final String VALIDATECODE_ERROR = "验证码输入错误";

@@ -9,9 +9,10 @@
 
     <!--根据条件查询-->
     <select id="selectByCondition" parameterType="string" resultType="com.tsccg.pojo.Member">
-        select * from t_member
+        select id,fileNumber,name,sex,idCard,phoneNumber,regTime,password,email,birthday,remark,age
+        from t_member
         <if test="value != null and value.length > 0">
-            where fileNumber = #{value} or phoneNumber = #{value} or name = #{value}
+            where fileNumber like CONCAT('%',#{value},'%') or name like CONCAT('%',#{value},'%') or phoneNumber like CONCAT('%',#{value},'%')
         </if>
     </select>
 
@@ -20,8 +21,8 @@
         <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into t_member(fileNumber,name,sex,idCard,phoneNumber,regTime,password,email,birthday,remark)
-        values (#{fileNumber},#{name},#{sex},#{idCard},#{phoneNumber},#{regTime},#{password},#{email},#{birthday},#{remark})
+        insert into t_member(fileNumber,name,sex,idCard,phoneNumber,regTime,password,email,birthday,remark,age)
+        values (#{fileNumber},#{name},#{sex},#{idCard},#{phoneNumber},#{regTime},#{password},#{email},#{birthday},#{remark},#{age})
     </insert>
 
     <!--删除会员-->
@@ -73,6 +74,9 @@
             <if test="remark != null">
                 remark = #{remark},
             </if>
+            <if test="age != null">
+                age = #{age},
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -96,4 +100,12 @@
     <select id="findMemberTotalCount" resultType="int">
         select count(id) from t_member
     </select>
+<!--    &lt;!&ndash;分页查询&ndash;&gt;-->
+<!--    <select id="findPage" parameterType="string" resultType="com.tsccg.pojo.Member">-->
+<!--        select id,fileNumber,name,sex,idCard,phoneNumber,regTime,password,email,birthday,remark-->
+<!--        from t_member-->
+<!--        <if test="value != null and value.length > 0">-->
+<!--            where fileNumber like CONCAT('%',#{value},'%') or name like CONCAT('%',#{value},'%') or phoneNumber like CONCAT('%',#{value},'%')-->
+<!--        </if>-->
+<!--    </select>-->
 </mapper>

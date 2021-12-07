@@ -29,13 +29,13 @@ public class LocalOrderController {
     /**
      * 通过后台进行预约
      * @param map 预约信息
-     * @param setmealIds 当前预约对应的所有套餐id
+     * @param setmealId 当前预约对应的套餐id
      * @return 执行结果
      */
     @RequestMapping("/submit")
-    public Result submit(@RequestBody Map<String,String> map,Integer[] setmealIds) {
+    public Result submit(@RequestBody Map<String,String> map,Integer setmealId) {
 //        System.out.println("map" + map);
-//        System.out.println("setmealIds" + Arrays.toString(setmealIds));
+//        System.out.println("setmealId" + Arrays.toString(setmealId));
         Result result = null;
         try {
             /*
@@ -53,10 +53,12 @@ public class LocalOrderController {
             /*
                 2.调用预约服务
              */
-            for (Integer setmealId : setmealIds) {
-                map.put("setmealId", setmealId.toString());
-                result = orderService.order(map);
-            }
+//            for (Integer setmealId : setmealIds) {
+//                map.put("setmealId", setmealId.toString());
+//                result = orderService.order(map);
+//            }
+            map.put("setmealId", setmealId.toString());
+            result = orderService.order(map);
         } catch (Exception e) {
             e.printStackTrace();
             return new Result(false, MessageConstant.ORDER_FAIL);
@@ -141,11 +143,11 @@ public class LocalOrderController {
      * @param id 预约id
      * @return 套餐id
      */
-    @RequestMapping("/findSetmealIds")
-    public Result findSetmealIds(Integer id) {
+    @RequestMapping("/findSetmealId")
+    public Result findSetmealId(Integer id) {
         try {
-            List<Integer> setmealIds = orderService.findSetmealIds(id);
-            return new Result(true,MessageConstant.QUERY_SETMEAL_SUCCESS,setmealIds);
+            Integer setmealId = orderService.findSetmealId(id);
+            return new Result(true,MessageConstant.QUERY_SETMEAL_SUCCESS,setmealId);
         } catch (Exception e) {
             e.printStackTrace();
             return new Result(false,MessageConstant.QUERY_SETMEAL_FAIL);
@@ -155,17 +157,17 @@ public class LocalOrderController {
     /**
      * 修改预约数据
      * @param map 修改后的预约数据
-     * @param setmealIds 修改后的套餐id
+     * @param setmealId 修改后的套餐id
      * @return 执行结果
      */
     @RequestMapping("/editOrder")
-    public Result editOrder(@RequestBody Map<String,String> map,Integer[] setmealIds) {
+    public Result editOrder(@RequestBody Map<String,String> map,Integer setmealId) {
         Result result = null;
         try {
             /*
                 1.调用服务层更新预约数据
              */
-            result = orderService.editOrder(map,setmealIds[0]);
+            result = orderService.editOrder(map,setmealId);
         } catch (Exception e) {
             e.printStackTrace();
             return new Result(false,MessageConstant.EDIT_ORDER_FAIL);

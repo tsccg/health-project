@@ -18,6 +18,15 @@ public class Member implements Serializable{
     private String email;//邮箱
     private Date birthday;//出生日期
     private String remark;//备注
+    private Integer age;//年龄
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
 
     public Integer getId() {
         return id;

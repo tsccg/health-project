@@ -50,4 +50,5 @@ public interface MemberDao {
      * 查询总会员数
      */
     public Integer findMemberTotalCount();
+
 }

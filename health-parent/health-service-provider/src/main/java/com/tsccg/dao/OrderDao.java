@@ -33,6 +33,12 @@ public interface OrderDao {
      * @param id 预约记录id
      */
     void deleteOrderById(Integer id);
+
+    /**
+     * 取消预约：根据会员id删除预约信息
+     * @param memberId 会员id
+     */
+    void deleteOrderByMemberId(Integer memberId);
     /**
      * 根据id查询预约基本信息
      * @param id 预约记录id
@@ -45,7 +51,7 @@ public interface OrderDao {
      * @param id 预约id
      * @return 套餐id
      */
-    List<Integer> findSetmealIds(Integer id);
+    Integer findSetmealId(Integer id);
 
     /**
      * 修改预约表数据

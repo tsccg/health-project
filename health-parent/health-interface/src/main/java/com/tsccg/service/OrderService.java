@@ -58,7 +58,7 @@ public interface OrderService {
      * @param id 预约id
      * @return 套餐id
      */
-    List<Integer> findSetmealIds(Integer id);
+    Integer findSetmealId(Integer id);
 
     /**
      * 修改预约数据

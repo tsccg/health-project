@@ -83,7 +83,7 @@ public class OrderServiceImpl implements OrderService {
             member.setSex(map.get("sex"));
             member.setIdCard(map.get("idCard"));
             member.setPhoneNumber(telephone);
-            member.setRegTime(date);
+            member.setRegTime(new Date());//注册日期
             member.setBirthday(DateUtils.parseString2Date(map.get("birthday")));
             //完成会员注册
             memberDao.add(member);
@@ -175,10 +175,17 @@ public class OrderServiceImpl implements OrderService {
      * @return 套餐id
      */
     @Override
-    public List<Integer> findSetmealIds(Integer id) {
-        return orderDao.findSetmealIds(id);
+    public Integer findSetmealId(Integer id) {
+        return orderDao.findSetmealId(id);
     }
 
+    /**
+     *
+     * @param map 修改后的预约数据
+     * @param setmealId 修改后的套餐id
+     * @return
+     * @throws Exception
+     */
     @Override
     public Result editOrder(Map<String, String> map, Integer setmealId) throws Exception {
         /*
@@ -230,6 +237,7 @@ public class OrderServiceImpl implements OrderService {
             member.setIdCard(map.get("idCard"));
             member.setPhoneNumber(telephone);
             member.setRegTime(orderDate);
+            member.setAge(Integer.parseInt(map.get("age")));
             member.setBirthday(DateUtils.parseString2Date(map.get("birthday")));
             //完成会员注册
             memberDao.add(member);
