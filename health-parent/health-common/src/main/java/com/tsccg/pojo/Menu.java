@@ -10,13 +10,15 @@ public class Menu implements Serializable{
     private Integer id;
     private String name; // 菜单名称
     private String linkUrl; // 访问路径
-    private String path;//菜单项所对应的路由路径
+    private String path;//菜单项所对应的路径
     private Integer priority; // 优先级（用于排序）
     private String description; // 描述
+    private Integer parentMenuId;//父菜单id
     private String icon;//图标
+    private Integer level;//菜单等级
     private Set<Role> roles = new HashSet<Role>(0);//角色集合
     private List<Menu> children = new ArrayList<>();//子菜单集合
-    private Integer parentMenuId;//父菜单id
+
 
     public Integer getId() {
         return id;
@@ -96,5 +98,39 @@ public class Menu implements Serializable{
 
     public void setParentMenuId(Integer parentMenuId) {
         this.parentMenuId = parentMenuId;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Menu)) {
+            return false;
+        }
+        Menu menu = (Menu) o;
+        return Objects.equals(getId(), menu.getId()) &&
+                Objects.equals(getName(), menu.getName()) &&
+                Objects.equals(getLinkUrl(), menu.getLinkUrl()) &&
+                Objects.equals(getPath(), menu.getPath()) &&
+                Objects.equals(getPriority(), menu.getPriority()) &&
+                Objects.equals(getDescription(), menu.getDescription()) &&
+                Objects.equals(getIcon(), menu.getIcon()) &&
+                Objects.equals(getRoles(), menu.getRoles()) &&
+                Objects.equals(getChildren(), menu.getChildren()) &&
+                Objects.equals(getParentMenuId(), menu.getParentMenuId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getLinkUrl(), getPath(), getPriority(), getDescription(), getIcon(), getRoles(), getChildren(), getParentMenuId());
     }
 }

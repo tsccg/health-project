@@ -1,9 +1,11 @@
 package com.tsccg.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.tsccg.dao.MenuDao;
 import com.tsccg.dao.PermissionDao;
 import com.tsccg.dao.RoleDao;
 import com.tsccg.dao.UserDao;
+import com.tsccg.pojo.Menu;
 import com.tsccg.pojo.Permission;
 import com.tsccg.pojo.Role;
 import com.tsccg.pojo.User;
@@ -11,6 +13,9 @@ import com.tsccg.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -27,11 +32,13 @@ public class UserServiceImpl implements UserService{
     private RoleDao roleDao;
     @Autowired
     private PermissionDao permissionDao;
+    @Autowired
+    private MenuDao menuDao;
 
     /**
      * 根据用户名查询数据库获取用户基本信息和关联的角色信息，同时需要查询角色对应的权限信息
      * @param username 输入的用户名
-     * @return 用户信息：1.密码 2.角色 3.权限
+     * @return 用户信息：1.密码 2.角色 3.权限 4.菜单
      */
     @Override
     public User findByName(String username) {
@@ -52,6 +59,21 @@ public class UserServiceImpl implements UserService{
                 if (permissions != null && permissions.size() > 0) {
                     //将权限信息填入当前角色实体类属性中
                     role.setPermissions(permissions);
+                }
+                //4.根据角色id查询对应的菜单
+                //根据当前角色id查询关联的顶级菜单
+                LinkedHashSet<Menu> menus = menuDao.findParentMenuByRoleId(roleId);
+                if (menus != null && menus.size() > 0) {
+                    for (Menu parentMenu : menus) {
+                        //根据顶级菜单id查询对应的子菜单列表
+                        List<Menu> childrenMenuList = menuDao.findChildrenMenuByParentId(parentMenu.getId());
+                        if (childrenMenuList != null && childrenMenuList.size() > 0) {
+                            //将子菜单列表填入当前顶级菜单实体类属性里
+                            parentMenu.setChildren(childrenMenuList);
+                        }
+                    }
+                    //将菜单信息填入当前角色实体类属性中
+                    role.setMenus(menus);
                 }
             }
             //将角色信息填入当前用户实体类属性中

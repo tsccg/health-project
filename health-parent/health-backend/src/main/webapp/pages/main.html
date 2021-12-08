@@ -60,11 +60,11 @@
                         <el-submenu v-for="menu in menuList" :index="menu.path">
                             <template slot="title">
                                 <i class="fa" :class="menu.icon"></i>
-                                {{menu.title}}
+                                {{menu.name}}
                             </template>
                             <template v-for="child in menu.children">
                                 <el-menu-item :index="child.path">
-                                    <a :href="child.linkUrl" target="right">{{child.title}}</a>
+                                    <a :href="child.linkUrl" target="right">{{child.name}}</a>
                                 </el-menu-item>
                             </template>
                         </el-submenu>
@@ -87,7 +87,8 @@
         el: '#app',
         data:{
             username:"TSCCG",//当前登录用户的用户名
-            menuList:[
+            menuList:[]//菜单数据
+            /*menuList:[
                 {
                     "path": "1",
                     "title": "工作台",
@@ -193,13 +194,21 @@
                         }
                     ]
                 }
-            ]
+            ]*/
         },
         created(){
             //发送ajax请求，向Controller请求获取当前登录用户的用户名，展示到页面上
             axios.get("/user/getUsername.do").then((resp)=>{
                 if(resp.data.flag) {
                     this.username = resp.data.data;
+                    //发送ajax请求，根据当前用户名向Controller请求可查看的菜单
+                    axios.get("/menu/findMenuListByUserName.do?username="+this.username).then((resp)=>{
+                        if (resp.data.flag){
+                            this.menuList = resp.data.data;
+                        } else {
+                            this.$message.error(resp);
+                        }
+                    });
                 }
             })
         }

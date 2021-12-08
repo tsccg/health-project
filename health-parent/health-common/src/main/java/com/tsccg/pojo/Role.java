@@ -3,6 +3,7 @@ package com.tsccg.pojo;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -71,5 +72,28 @@ public class Role implements Serializable {
 
     public void setMenus(LinkedHashSet<Menu> menus) {
         this.menus = menus;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Role)) {
+            return false;
+        }
+        Role role = (Role) o;
+        return Objects.equals(getId(), role.getId()) &&
+                Objects.equals(getName(), role.getName()) &&
+                Objects.equals(getKeyword(), role.getKeyword()) &&
+                Objects.equals(getDescription(), role.getDescription()) &&
+                Objects.equals(getUsers(), role.getUsers()) &&
+                Objects.equals(getPermissions(), role.getPermissions()) &&
+                Objects.equals(getMenus(), role.getMenus());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getKeyword(), getDescription(), getUsers(), getPermissions(), getMenus());
     }
 }
