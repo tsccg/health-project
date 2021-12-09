@@ -1,7 +1,10 @@
 package com.tsccg.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.github.pagehelper.Page;
 import com.tsccg.constant.MessageConstant;
+import com.tsccg.entity.PageResult;
+import com.tsccg.entity.QueryPageBean;
 import com.tsccg.entity.Result;
 import com.tsccg.pojo.Menu;
 import com.tsccg.pojo.Role;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.swing.event.MenuDragMouseEvent;
 import java.util.*;
 
 /**
@@ -85,6 +89,7 @@ public class MenuController {
     public Result findAllParentMenu() {
         try {
             List<Menu> parentMenuList = menuService.findAllParentMenu();
+            parentMenuList.add(0,new Menu("无上级菜单"));
             return new Result(true,MessageConstant.QUERY_MENU_LIST_SUCCESS,parentMenuList);
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,6 +97,11 @@ public class MenuController {
         }
     }
 
+    /**
+     * 添加菜单
+     * @param menu
+     * @return
+     */
     @RequestMapping("/add")
     public Result add(@RequestBody Menu menu) {
 //        System.out.println("上级菜单id：" + menu.getParentMenuId());
@@ -101,4 +111,67 @@ public class MenuController {
             return new Result(false,MessageConstant.ADD_MENU_FAIL);
         }
     }
+
+    /**
+     * 分页查询
+     * @param queryPageBean
+     * @return
+     */
+    @RequestMapping("/findPage")
+    public PageResult findPage(@RequestBody QueryPageBean queryPageBean) {
+        PageResult pageResult = null;
+        try {
+            pageResult = menuService.findPage(queryPageBean);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return pageResult;
+    }
+
+    /**
+     * 根据菜单id删除菜单
+     * @param id 菜单id
+     * @return 执行结果
+     */
+    @RequestMapping("/delete")
+    public Result delete(Integer id) {
+        try {
+            menuService.deleteById(id);
+            return new Result(true,MessageConstant.DELETE_MENU_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,MessageConstant.DELETE_MENU_FAIL);
+        }
+    }
+
+    /**
+     * 根据菜单id查询菜单数据
+     * @param id
+     * @return
+     */
+    @RequestMapping("/findById")
+    public Result findById(Integer id) {
+        try {
+            Menu menu = menuService.findById(id);
+            return new Result(true,MessageConstant.QUERY_MENU_SUCCESS,menu);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,MessageConstant.QUERY_MENU_FAIL);
+        }
+    }
+
+    /**
+     * 编辑菜单
+     * @param menu
+     * @return
+     */
+    @RequestMapping("/edit")
+    public Result edit(@RequestBody Menu menu) {
+        try {
+            return menuService.edit(menu);
+        } catch (Exception e) {
+            return new Result(false,MessageConstant.EDIT_MENU_FAIL);
+        }
+    }
+
 }

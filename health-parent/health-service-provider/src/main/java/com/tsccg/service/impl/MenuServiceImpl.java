@@ -1,10 +1,14 @@
 package com.tsccg.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.tsccg.constant.MessageConstant;
 import com.tsccg.dao.MenuDao;
 import com.tsccg.dao.RoleDao;
 import com.tsccg.dao.UserDao;
+import com.tsccg.entity.PageResult;
+import com.tsccg.entity.QueryPageBean;
 import com.tsccg.entity.Result;
 import com.tsccg.pojo.Menu;
 import com.tsccg.pojo.Role;
@@ -12,6 +16,7 @@ import com.tsccg.pojo.User;
 import com.tsccg.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.*;
 
@@ -26,8 +31,6 @@ public class MenuServiceImpl implements MenuService{
     private MenuDao menuDao;
     @Autowired
     private RoleDao roleDao;
-    @Autowired
-    private UserDao userDao;
 
     /**
      * 获取所有顶级菜单
@@ -43,7 +46,7 @@ public class MenuServiceImpl implements MenuService{
      * @param menu
      * 请求参数：{name: "地址", linkUrl: "address.html", parentMenuId: 5, icon: "tt", attention: "无"}
      * id,name,linkUrl,priority,path,icon,description,parentMenuId,level
-     * 待补全参数：priority,path,,level
+     * 待补全参数：priority,path,level
      */
     @Override
     public Result add(Menu menu) {
@@ -52,7 +55,7 @@ public class MenuServiceImpl implements MenuService{
          */
         if (menu.getParentMenuId() == null) {
             //添加的是父菜单
-            if (menu.getLinkUrl() != null) {
+            if (menu.getLinkUrl() != null && menu.getLinkUrl().length() > 0) {
                 //一级菜单无访问路径
                 return new Result(false, MessageConstant.PARENT_MENU_NO_LINK_URL);
             }
@@ -90,4 +93,89 @@ public class MenuServiceImpl implements MenuService{
         roleDao.addMenuById(map);
         return new Result(true,MessageConstant.ADD_MENU_SUCCESS);
     }
+
+    /**
+     * 分页查询
+     * @param queryPageBean
+     * @return
+     */
+    @Override
+    public PageResult findPage(QueryPageBean queryPageBean) {
+        //取出参数
+        Integer currentPage = queryPageBean.getCurrentPage();
+        Integer pageSize = queryPageBean.getPageSize();
+        String queryString = queryPageBean.getQueryString();
+        //调用分页助手
+        PageHelper.startPage(currentPage,pageSize);
+        //查询数据库
+        Page<Menu> page = menuDao.findByCondition(queryString);
+        return new PageResult(page.getTotal(),page.getResult());
+    }
+
+    /**
+     * 根据id删除菜单
+     * @param id
+     */
+    @Override
+    public void deleteById(Integer id) {
+        //1.删除当前菜单下的所有子菜单
+        List<Menu> childrenMenus = menuDao.findChildrenMenuByParentId(id);
+        if (childrenMenus != null && childrenMenus.size() > 0) {
+            //清除所有子菜单的关联数据
+            for (Menu childrenMenu : childrenMenus) {
+                menuDao.deleteConnectionById(childrenMenu.getId());
+            }
+            //根据父菜单id删除其所有子菜单
+            menuDao.deleteByParentMenuId(id);
+        }
+        //2.清除当前菜单在关联表中的数据
+        menuDao.deleteConnectionById(id);
+        //3.删除当前菜单
+        menuDao.deleteById(id);
+    }
+
+    /**
+     * 根据菜单id查询菜单数据
+     * @param id
+     * @return
+     */
+    @Override
+    public Menu findById(Integer id) {
+        return menuDao.findById(id);
+    }
+
+    /**
+     * 编辑菜单
+     * @param menu
+     * @return 执行结果
+     */
+    @Override
+    public Result edit(Menu menu) {
+        /*
+            1.判断是否为父菜单
+         */
+        Integer parentMenuId = menu.getParentMenuId();
+        if (parentMenuId == null) {
+            //如果为父菜单则不能有访问路径
+            if (menu.getLinkUrl() != null && menu.getLinkUrl().length() > 0) {
+                return new Result(false, MessageConstant.PARENT_MENU_NO_LINK_URL);
+            }
+            //父菜单的菜单等级为1
+            menu.setLevel(1);
+        } else {
+            //如果为子菜单则不能有更下一级菜单
+            Integer childCount = menuDao.findChildCountByParentId(menu.getId());
+            if (childCount > 0) {
+                return new Result(false,MessageConstant.CHILD_MENU_NO_CHILD);
+            }
+            //子菜单的菜单等级为2
+            menu.setLevel(2);
+        }
+        /*
+            2.更新数据库
+         */
+        menuDao.update(menu);
+        return new Result(true,MessageConstant.EDIT_MENU_SUCCESS);
+    }
+
 }

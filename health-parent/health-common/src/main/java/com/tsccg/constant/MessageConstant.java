@@ -82,11 +82,14 @@ public class MessageConstant {
     public static final String GET_SETMEAL_LIST_FAIL = "查询套餐列表数据失败";
     public static final String QUERY_MENU_LIST_SUCCESS = "查询菜单列表数据成功";
     public static final String QUERY_MENU_LIST_FAIL = "查询菜单列表数据失败";
+    public static final String QUERY_MENU_SUCCESS = "查询菜单数据成功";
+    public static final String QUERY_MENU_FAIL = "查询菜单数据失败";
     public static final String ADD_MENU_SUCCESS = "新增菜单成功";
     public static final String ADD_MENU_FAIL = "新增菜单失败";
     public static final String DELETE_MENU_SUCCESS = "删除菜单成功";
     public static final String DELETE_MENU_FAIL = "删除菜单失败";
     public static final String EDIT_MENU_SUCCESS = "编辑菜单成功";
     public static final String EDIT_MENU_FAIL = "编辑菜单失败";
-    public static final String PARENT_MENU_NO_LINK_URL = "一级菜单无访问路径";
+    public static final String PARENT_MENU_NO_LINK_URL = "一级菜单不能有访问路径";
+    public static final String CHILD_MENU_NO_CHILD = "包含二级菜单的一级菜单不能转换为二级菜单";
 }

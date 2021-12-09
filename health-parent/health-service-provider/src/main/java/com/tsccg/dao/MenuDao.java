@@ -1,5 +1,6 @@
 package com.tsccg.dao;
 
+import com.github.pagehelper.Page;
 import com.tsccg.pojo.Menu;
 
 import java.util.LinkedHashSet;
@@ -54,4 +55,34 @@ public interface MenuDao {
      * @param menu
      */
     void add(Menu menu);
+    /**
+     * 分页查询
+     * @param queryString
+     * @return
+     */
+    Page<Menu> findByCondition(String queryString);
+
+    /**
+     * 清除关联表数据
+     * @param id
+     */
+    void deleteConnectionById(Integer id);
+
+    /**
+     * 根据id删除菜单
+     * @param id
+     */
+    void deleteById(Integer id);
+
+    /**
+     * 根据父菜单id删除其所有子菜单
+     * @param id 父菜单id
+     */
+    void deleteByParentMenuId(Integer id);
+
+    /**
+     * 编辑菜单
+     * @param menu
+     */
+    void update(Menu menu);
 }

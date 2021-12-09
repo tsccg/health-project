@@ -19,6 +19,12 @@ public class Menu implements Serializable{
     private Set<Role> roles = new HashSet<Role>(0);//角色集合
     private List<Menu> children = new ArrayList<>();//子菜单集合
 
+    public Menu() {
+    }
+
+    public Menu(String name) {
+        this.name = name;
+    }
 
     public Integer getId() {
         return id;

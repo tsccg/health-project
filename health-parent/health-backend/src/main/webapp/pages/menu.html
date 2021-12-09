@@ -15,7 +15,7 @@
     <!-- 引入组件库 -->
     <script type="text/javascript" src="../js/jquery.min.js"></script>
     <script src="../js/vue.js"></script>
-    <script src="../plugins/elementui/index.js"></script>
+    <script src="../plugins/elementui/index(1).js"></script>
     <script src="../js/axios-0.18.0.js"></script>
     <style>
         .datatable {
@@ -66,12 +66,26 @@
                     row-key="id"
                     border
                     :tree-props="{children: 'children'}">
+                <el-table-column width=50% align="center" sortable></el-table-column>
+                <el-table-column prop="icon" align="center" sortable label="图标">
+                    <template slot-scope="scope">
+                        <i class="fa" :class="scope.row.icon"></i>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="name" align="center" sortable label="菜单名称"></el-table-column>
-                <el-table-column prop="linkUrl" label="访问路径" sortable align="center"></el-table-column>
                 <el-table-column prop="path" label="路径级别" sortable align="center"></el-table-column>
-                <el-table-column prop="parentMenuId" label="自关联Id" sortable align="center"></el-table-column>
-                <el-table-column prop="priority" label="菜单级别" sortable align="center"></el-table-column>
-                <el-table-column label="操作" sortable align="center">
+                <el-table-column prop="linkUrl" label="访问路径" sortable align="center" width="200px"></el-table-column>
+                <el-table-column prop="priority" label="优先级别" sortable align="center"></el-table-column>
+                <el-table-column prop="parentMenuId" label="上级菜单" sortable align="center">
+                    <template slot-scope="scope">
+                        <span v-for="item in parentMenus" v-if="item.id==scope.row.parentMenuId">
+                            {{item.name}}
+                        </span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="level" label="菜单级别" sortable align="center"></el-table-column>
+                <el-table-column prop="description" label="描述" sortable align="center"></el-table-column>
+                <el-table-column label="操作" sortable align="center" width="200px">
                     <template slot-scope="scope">
                         <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
                         <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
@@ -80,7 +94,7 @@
             </el-table>
             <div class="pagination-container">
                 <el-pagination
-                        class="pagiantion"
+                        class="pagination"
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
                         :current-page="pagination.currentPage"
@@ -147,7 +161,7 @@
                         </el-row>
                         <el-row>
                             <el-col :span="24">
-                                <el-form-item label="注意事项">
+                                <el-form-item label="描述">
                                     <el-input v-model="formData.description" type="textarea"></el-input>
                                 </el-form-item>
                             </el-col>
@@ -161,9 +175,9 @@
             </div>
 
             <!-- 编辑标签弹层 -->
-            <div class="add-form">
-                <el-dialog title="编辑菜单项" :visible.sync="dialogFormVisible4Edit">
-                    <el-form ref="dataAddForm" :model="formData" :rules="rules" label-position="right"
+            <div class="edit-form">
+                <el-dialog title="新增菜单项" :visible.sync="dialogFormVisible4Edit">
+                    <el-form ref="dataEditForm" :model="formData" :rules="rules" label-position="right"
                              label-width="100px">
                         <el-row>
                             <el-col :span="12">
@@ -191,38 +205,40 @@
                         </el-row>
                         <el-row>
                             <el-col :span="12">
-                                <el-form-item label="自关联Id" prop="parentMenuId">
-                                    <el-select v-model="formData.parentMenuId">
-                                        <el-option label="1" value="1"></el-option>
-                                        <el-option label="5" value="5"></el-option>
-                                        <el-option label="11" value="11"></el-option>
-                                        <el-option label="13" value="13"></el-option>
-                                        <el-option label="15" value="15"></el-option>
+                                <el-form-item label="上级菜单" prop="parentMenuId">
+                                    <el-select
+                                            v-model="formData.parentMenuId"
+                                            placeholder="请选择上级菜单"
+                                            clearable>
+                                        <el-option
+                                                v-for="item in parentMenus"
+                                                :label="item.name"
+                                                :value="item.id"
+                                                :key="item.id"
+                                                :disabled="item.id == formData.id">
+                                        </el-option>
                                     </el-select>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="12">
+                                <el-form-item label="图标">
+                                    <el-input v-model="formData.icon" type="text"></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <!--<el-col :span="12">
                                 <el-form-item label="菜单级别" prop="level">
                                     <el-input v-model="formData.level"/>
                                 </el-form-item>
-                            </el-col>
+                            </el-col>-->
                         </el-row>
                         <el-row>
                             <el-col :span="24">
-                                <el-form-item label="图标">
-                                    <el-input v-model="formData.icon" type="textarea"></el-input>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="24">
-                                <el-form-item label="注意事项">
-                                    <el-input v-model="formData.attention" type="textarea"></el-input>
+                                <el-form-item label="描述">
+                                    <el-input v-model="formData.description" type="textarea"></el-input>
                                 </el-form-item>
                             </el-col>
                         </el-row>
                     </el-form>
-                    </template>
                     <div slot="footer" class="dialog-footer">
                         <el-button @click="dialogFormVisible4Edit = false">取消</el-button>
                         <el-button type="primary" @click="handleEdit()">确定</el-button>
@@ -246,14 +262,14 @@
                 queryString: null,
             },
             dataList: [],//列表数据
-            formData: {"parentMenuId":9999},//表单数据
+            formData: {},//表单数据
             dialogFormVisible: false,//控制添加窗口显示/隐藏
             dialogFormVisible4Edit: false,//控制编辑窗口显示/隐藏
             rules: {//校验规则
                 // linkUrl: [{required: true, message: '访问路径为必填项', trigger: 'blur'}],
                 name: [{required: true, message: '菜单名称为必填项', trigger: 'blur'}],
-                // path: [{required: true, message: '路径级别为必填项', trigger: 'blur'}],
-                // priority: [{required: true, message: '优先级为必填项', trigger: 'blur'}],
+                path: [{required: true, message: '路径级别为必填项', trigger: 'blur'}],
+                priority: [{required: true, message: '优先级为必填项', trigger: 'blur'}],
                 // parentMenuId: [{required: true, message: '上级菜单为必填项', trigger: 'blur'}],
                 // level: [{required: true, message: '菜单级别为必填项', trigger: 'blur'}]
             },
@@ -261,13 +277,12 @@
         },
         created() {
             this.findPage();
+
         },
         methods: {
-            // 弹出添加窗口
-            handleCreate() {
-                this.resetForm();
-                this.dialogFormVisible=true;
-                //发起ajax请求，获取所有顶级菜单数据，回显到下拉列表上
+            //获取所有顶级菜单
+            findAllParentMenu() {
+                //发起ajax请求，回显到下拉列表上
                 axios.get("/menu/findAllParentMenu.do").then((resp)=>{
                     if (resp.data.flag) {
                         this.parentMenus = resp.data.data;
@@ -278,6 +293,11 @@
                     this.showMessage(resp);
                 });
             },
+            // 弹出添加窗口
+            handleCreate() {
+                this.resetForm();
+                this.dialogFormVisible=true;
+            },
             //添加
             handleAdd() {
                 this.$refs["dataAddForm"].validate(result => {
@@ -285,10 +305,10 @@
                         axios.post("/menu/add.do", this.formData).then(res => {
                             if (res.data.flag) {
                                 this.$message.success(res.data.message);
+                                this.dialogFormVisible = false;
                             } else {
                                 this.$message.error(res.data.message);
                             }
-                            this.dialogFormVisible = false;
                         }).finally(() => {
                             this.findPage();
                         })
@@ -304,28 +324,35 @@
             // 弹出编辑窗口
             handleUpdate(row) {
                 this.dialogFormVisible4Edit = true;
-                axios.get("/menu/handleUpdate.do?id=" + row.id).then(res => {
-                    this.formData=res.data.data;
+                //回显菜单数据
+                axios.get("/menu/findById.do?id=" + row.id).then((resp) => {
+                    if (resp.data.flag) {
+                        this.formData=resp.data.data;
+                    } else {
+                        this.$message.error(resp.data.message);
+                    }
+                }).catch((resp)=>{
+                    this.showMessage(resp);
                 });
             },
             //编辑
             handleEdit() {
-                this.$refs["dataAddForm"].validate(result => {
+                this.$refs["dataEditForm"].validate((result) => {
                     if (result) {
-                        axios.post("/menu/handleEdit.do", this.formData).then(res => {
-                            if (res.data.flag) {
-                                this.$message.success(res.data.message);
+                        axios.post("/menu/edit.do", this.formData).then(resp => {
+                            if (resp.data.flag) {
+                                this.$message.success(resp.data.message);
+                                this.dialogFormVisible4Edit = false;
                             } else {
-                                this.$message.error(res.data.message);
+                                this.$message.error(resp.data.message);
                             }
-                            this.dialogFormVisible4Edit = false;
-                            this.resetForm();
+                        }).catch((resp)=>{
+                            this.showMessage(resp);
                         }).finally(() => {
                             this.findPage();
                         })
                     }
-                    this.dialogFormVisible4Edit = true;
-                })
+                });
             },
 
             //分页查询
@@ -336,9 +363,11 @@
                     pageSize: this.pagination.pageSize,
                     queryString: this.pagination.queryString
                 };
-                axios.post("/menu/findPage.do", param).then(res => {
+                axios.post("/menu/findPage.do", param).then((res) => {
                     this.dataList = res.data.rows;
                     this.pagination.total = res.data.total;
+                }).finally(()=>{
+                    this.findAllParentMenu();
                 });
             },
             //条件查询
@@ -363,12 +392,12 @@
             },
             // 删除
             handleDelete(row) {
-                this.$confirm('此操作将永久删除数据, 是否继续?', '提示', {
+                this.$confirm('此操作将永久删除当前菜单及其子菜单, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    axios.get("/menu/handleDelete.do?id=" + row.id).then(res => {
+                    axios.get("/menu/delete.do?id=" + row.id).then(res => {
                         if (res.data.flag) {
                             this.$message({
                                 type: 'success',
@@ -377,6 +406,8 @@
                         } else {
                             this.$message.error(res.data.message);
                         }
+                    }).catch((resp)=>{
+                        this.showMessage(resp);
                     }).finally(() => {
                         //分页查询
                         this.findPage();
