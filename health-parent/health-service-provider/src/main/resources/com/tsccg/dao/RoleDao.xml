@@ -11,9 +11,14 @@
         on r.id = ur.role_id
         where ur.user_id = #{user_id}
     </select>
-    <insert id="addMenuById" parameterType="map">
+    <insert id="addMenu" parameterType="map">
         insert into
         t_role_menu(role_id,menu_id)
         values(#{role_id},#{menu_id})
+    </insert>
+    <insert id="addPermission" parameterType="map">
+        insert into
+        t_role_permission(role_id,permission_id)
+        values(#{role_id},#{permission_id})
     </insert>
 </mapper>

@@ -140,6 +140,17 @@
                 this.initData(null);
             },
             methods: {
+                //权限提示
+                showMessage(r){
+                    if(r == 'Error: Request failed with status code 403'){
+                        //权限不足
+                        this.$message.error('无访问权限');
+                        return;
+                    }else{
+                        this.$message.error('未知错误');
+                        return;
+                    }
+                },
 				//预约设置
                 handleOrderSet(day){
                     // alert(day);
@@ -162,6 +173,8 @@
                             } else {
                                 this.$message.error(resp.data.message);
                             }
+                        }).catch((resp)=>{
+                            this.showMessage(resp);
                         }).finally(()=>{
                             this.initData(this.formatDate(day.getFullYear(),day.getMonth()+1,1));
                         });
@@ -273,6 +286,8 @@
                         } else {
                             this.$message.error(resp.data.message);
                         }
+                    }).catch((resp)=>{
+                        this.showMessage(resp);
                     });
                 },
 				//切换到当前月份

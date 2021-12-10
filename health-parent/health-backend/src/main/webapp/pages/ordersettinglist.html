@@ -413,11 +413,6 @@
                 this.findPage();
             },
             methods: {
-                // // 切换单选框
-                // changeRedio(event,row){
-                //     // console.log('event,row:',event,row);
-                //     this.setmealId = event;
-                // },
                 //切换预约状态
                 orderStatusSwitch(row){
                     // alert(row.orderStatus)
@@ -451,6 +446,8 @@
                                     //执行失败
                                     this.$message.error(res.data.message);
                                 }
+                            }).catch((resp)=>{
+                                this.showMessage(resp);
                             }).finally(() => {
                                 //关闭添加窗口
                                 this.dialogFormVisible=false;
@@ -476,8 +473,10 @@
                                         message:resp.data.message
                                     });
                                 } else {
-                                    this.$message.err(resp.data.message);
+                                    this.$message.error(resp.data.message);
                                 }
+                            }).catch((resp)=>{
+                                this.showMessage(resp);
                             }).finally(()=>{
                                 this.findPage();
                             });
@@ -493,6 +492,8 @@
                     this.resetForm();
                     axios.post("/setmeal/findAll.do").then((res)=>{
                         this.tableData=res.data.data;
+                    }).catch((resp)=>{
+                        this.showMessage(resp);
                     })
                 },
                 // 弹出编辑窗口
@@ -518,6 +519,8 @@
                             this.$message.error(resp.data.message);
                             return false;
                         }
+                    }).catch((resp)=>{
+                        this.showMessage(resp);
                     });
                     //3.回显当前预约所选的套餐
                     axios.get("/localOrder/findSetmealId.do?id="+row.id).then((resp)=>{
@@ -526,6 +529,8 @@
                         } else {
                             this.$message.error(resp.data.message);
                         }
+                    }).catch((resp)=>{
+                        this.showMessage(resp);
                     });
                 },
                 // 删除
@@ -567,10 +572,11 @@
                         //查询字段
                         queryString: this.pagination.queryString
                     }
-
                     axios.post("/localOrder/findOrdersPage.do",param).then((resp)=>{
                         this.pagination.total=resp.data.total;
                         this.dataList=resp.data.rows;
+                    }).catch((resp)=>{
+                        this.showMessage(resp);
                     });
                 },
                 _findPage() {

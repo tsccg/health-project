@@ -397,16 +397,18 @@
                 handleAdd () {
                     this.$refs['dataAddForm'].validate((validate)=>{
                         if(validate) {
-                            this.dialogFormVisible = false;
                             axios.post("/setmeal/add.do?checkgroupIds="+this.checkgroupIds,this.formData).then((resp)=>{
                                 if(resp.data.flag) {
                                     this.$message({
                                         type:'success',
                                         message:resp.data.message
                                     });
+                                    this.dialogFormVisible = false;
                                 } else {
                                     this.$message.err(resp.data.message);
                                 }
+                            }).catch((resp)=>{
+                                this.showMessage(resp);
                             }).finally(()=>{
                                 this.findPage();
                             });
@@ -414,7 +416,7 @@
                             this.$message.error("表单校验失败，请检查输入内容!");
                             return false;
                         }
-                    })
+                    });
                 },
                 //分页查询
                 findPage() {
@@ -426,6 +428,8 @@
                     axios.post("/setmeal/findPage.do",param).then((resp)=>{
                         this.dataList = resp.data.rows;
                         this.pagination.total = resp.data.total;
+                    }).catch((resp)=>{
+                        this.showMessage(resp);
                     });
                 },
                 _findPage() {
@@ -447,6 +451,8 @@
                             } else {
                                 this.$message.error(resp.data.message);
                             }
+                        }).catch((resp)=>{
+                            this.showMessage(resp);
                         }).finally(()=>{
                             this.findPage();
                         });
@@ -458,16 +464,18 @@
                 handleEdit() {
                     this.$refs['dataEditForm'].validate((validate)=>{
                         if(validate) {
-                            this.dialogFormVisible4Edit = false;
                             axios.post("/setmeal/edit.do?checkgroupIds="+this.checkgroupIds+"&oldImg="+this.oldImg,this.formData).then((resp)=>{
                                 if(resp.data.flag) {
                                     this.$message({
                                         type:'success',
                                         message:resp.data.message
                                     });
+                                    this.dialogFormVisible4Edit = false;
                                 } else {
                                     this.$message.err(resp.data.message);
                                 }
+                            }).catch((resp)=>{
+                                this.showMessage(resp);
                             }).finally(()=>{
                                 this.findPage();
                             });
@@ -495,7 +503,9 @@
                         } else {
                             this.$message.error(resp.data.message);
                         }
-                    })
+                    }).catch((resp)=>{
+                        this.showMessage(resp);
+                    });
                 },
                 //弹出编辑窗口
                 handleUpdate(row) {
@@ -511,7 +521,9 @@
                         } else {
                             this.$message.error(resp.data.message);
                         }
-                    });
+                    }).catch((resp)=>{
+                        this.showMessage(resp);
+                    });;
                     //第二次ajax请求：回显所有检查组数据
                     axios.get("/checkGroup/findAll.do?id="+row.id).then((resp)=>{
                         if(resp.data.flag) {
@@ -527,13 +539,26 @@
                         } else {
                             this.$message.error(resp.data.message);
                         }
-                    })
+                    }).catch((resp)=>{
+                        this.showMessage(resp);
+                    });
                 },
                 //切换页码
                 handleCurrentChange(currentPage) {
                     this.pagination.currentPage = currentPage;
                     this.findPage();
-                }
+                },
+                //权限不足提示
+                showMessage(resp){
+                    if(resp == 'Error: Request failed with status code 403'){
+                        //权限不足
+                        this.$message.error('无访问权限');
+                        return;
+                    }else{
+                        this.$message.error('未知错误');
+                        return;
+                    }
+                },
             }
         })
     </script>

@@ -15,6 +15,7 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -54,6 +55,7 @@ public class ReportController {
      *     "message":"获取会员统计数据成功"
      * }
      */
+    @PreAuthorize("hasAuthority('REPORT_VIEW')")
     @RequestMapping("/getMemberReport")
     public Result getMemberReport() throws Exception {
         try {
@@ -94,6 +96,7 @@ public class ReportController {
       "flag":true,
       "message":"获取套餐统计数据成功"
      */
+    @PreAuthorize("hasAuthority('REPORT_VIEW')")
     @RequestMapping("/getSetmealReport")
     public Result getSetmealReport() {
         try {
@@ -139,36 +142,38 @@ public class ReportController {
 *                     ]
 *                 }
      */
+    @PreAuthorize("hasAuthority('REPORT_VIEW')")
     @RequestMapping("/getBusinessReportData")
     public Result getBusinessReportData() {
         Map<String,Object> reportData = null;
         try {
             //模拟数据：
-            // reportData.put("reportDate","2021.11.30");
-//        reportData.put("todayNewMember",5);
-//        reportData.put("totalMember",200);
-//        reportData.put("thisWeekNewMember",20);
-//        reportData.put("thisMonthNewMember",50);
-//        reportData.put("todayOrderNumber",100);
-//        reportData.put("todayVisitsNumber",80);
-//        reportData.put("thisWeekOrderNumber",200);
-//        reportData.put("thisWeekVisitsNumber",170);
-//        reportData.put("thisMonthOrderNumber",500);
-//        reportData.put("thisMonthVisitsNumber",400);
-//        List<Map<String,Object>> hotSetmeal = new ArrayList<>();
-//        Map<String,Object> map1 = new HashMap<>();
-//        map1.put("name","阳光爸妈升级肿瘤12项筛查（男女单人）体检套餐");
-//        map1.put("setmeal_count",200);
-//        map1.put("proportion",0.5);//占百分比
-//        hotSetmeal.add(map1);
-//
-//        Map<String,Object> map2 = new HashMap<>();
-//        map2.put("name","阳光爸妈升级肿瘤12项筛查体检套餐");
-//        map2.put("setmeal_count",100);
-//        map2.put("proportion",0.2);//占百分比
-//        hotSetmeal.add(map2);
-//
-//        reportData.put("hotSetmeal",hotSetmeal);
+             /*reportData.put("reportDate","2021.11.30");
+            reportData.put("todayNewMember",5);
+            reportData.put("totalMember",200);
+            reportData.put("thisWeekNewMember",20);
+            reportData.put("thisMonthNewMember",50);
+            reportData.put("todayOrderNumber",100);
+            reportData.put("todayVisitsNumber",80);
+            reportData.put("thisWeekOrderNumber",200);
+            reportData.put("thisWeekVisitsNumber",170);
+            reportData.put("thisMonthOrderNumber",500);
+            reportData.put("thisMonthVisitsNumber",400);
+            List<Map<String,Object>> hotSetmeal = new ArrayList<>();
+            Map<String,Object> map1 = new HashMap<>();
+            map1.put("name","阳光爸妈升级肿瘤12项筛查（男女单人）体检套餐");
+            map1.put("setmeal_count",200);
+            map1.put("proportion",0.5);//占百分比
+            hotSetmeal.add(map1);
+
+            Map<String,Object> map2 = new HashMap<>();
+            map2.put("name","阳光爸妈升级肿瘤12项筛查体检套餐");
+            map2.put("setmeal_count",100);
+            map2.put("proportion",0.2);//占百分比
+            hotSetmeal.add(map2);
+
+            reportData.put("hotSetmeal",hotSetmeal);
+            */
             reportData = reportService.getBusinessReport();
             return new Result(true,MessageConstant.GET_BUSINESS_REPORT_SUCCESS,reportData);
         } catch (Exception e) {
@@ -180,6 +185,7 @@ public class ReportController {
     /**
      * 导出Excel文件
      */
+    @PreAuthorize("hasAuthority('EXPORT_REPORT')")
     @RequestMapping("/exportBusinessReport")
     public Result exportBusinessReport(HttpServletRequest request, HttpServletResponse response) throws Exception {
         ServletOutputStream out = null;
@@ -275,6 +281,7 @@ public class ReportController {
     /**
      * 导出PDF文件
      */
+    @PreAuthorize("hasAuthority('EXPORT_REPORT')")
     @RequestMapping("/exportBusinessReport4PDF")
     public Result exportBusinessReport4PDF(HttpServletRequest request, HttpServletResponse response) throws Exception {
         ServletOutputStream out = null;

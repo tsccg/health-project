@@ -92,4 +92,19 @@ public class MessageConstant {
     public static final String EDIT_MENU_FAIL = "编辑菜单失败";
     public static final String PARENT_MENU_NO_LINK_URL = "一级菜单不能有访问路径";
     public static final String CHILD_MENU_NO_CHILD = "包含二级菜单的一级菜单不能转换为二级菜单";
+    public static final String ADD_PERMISSION_SUCCESS = "新增权限项成功";
+    public static final String ADD_PERMISSION_FAIL = "新增权限项失败";
+    public static final String DELETE_PERMISSION_SUCCESS = "删除权限项成功";
+    public static final String DELETE_PERMISSION_FAIL = "删除权限项失败";
+    public static final String PERMISSION_HAVE_CONNECTION = "当前权限被引用，不能删除";
+    public static final String EDIT_PERMISSION_SUCCESS = "编辑权限项成功";
+    public static final String EDIT_PERMISSION_FAIL = "编辑权限项失败";
+    public static final String PERMISSION_ENABLE_HAS_OPEN = "权限项已启用";
+    public static final String PERMISSION_ENABLE_HAS_CLOSE = "权限项已关闭";
+    public static final String EDIT_PERMISSION_ENABLE_FAIL = "权限项启用状态切换失败";
+    public static final String QUERY_PERMISSION_SUCCESS = "查询权限项成功";
+    public static final String QUERY_PERMISSION_FAIL = "查询权限项失败";
+    public static final String QUERY_PERMISSION_LIST_SUCCESS = "查询权限列表数据成功";
+    public static final String QUERY_PERMISSION_LIST_FAIL = "查询权限列表数据失败";
+    public static final String PERMISSION_KEYWORD_NON_REPEATABLE = "已存在该权限项关键字";
 }

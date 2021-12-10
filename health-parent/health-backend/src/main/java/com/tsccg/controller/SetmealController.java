@@ -166,11 +166,11 @@ public class SetmealController {
         }
 
     }
-
     /**
      * 获取所有套餐列表
      * @return
      */
+    @PreAuthorize("hasAuthority('SETMEAL_QUERY')")
     @RequestMapping("/findAll")
     public Result findAll() {
         try {

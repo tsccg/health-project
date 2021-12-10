@@ -300,6 +300,8 @@
                                 } else {
                                     this.$message.error(resp.data.message);
                                 }
+                            }).catch((resp)=>{
+                                this.showMessage(resp);
                             }).finally(()=>{
                                 this.findPage();
                             })
@@ -330,6 +332,8 @@
                                     //添加失败
                                     this.$message.error(resp.data.message);
                                 }
+                            }).catch((resp)=>{
+                                this.showMessage(resp);
                             }).finally(()=>{
                                 this.findPage();
                             })
@@ -350,7 +354,9 @@
                     axios.post("/checkGroup/findPage.do",param).then((resp)=>{
                         this.dataList = resp.data.rows;
                         this.pagination.total = resp.data.total;
-                    })
+                    }).catch((resp)=>{
+                        this.showMessage(resp);
+                    });
                 },
                 _findPage() {
                   this.pagination.currentPage = 1;
@@ -372,6 +378,8 @@
                         } else {
                             this.$message.error("resp.data.message")
                         }
+                    }).catch((resp)=>{
+                        this.showMessage(resp);
                     });
                 },
                 // 弹出编辑窗口
@@ -386,6 +394,8 @@
                         } else {
                             this.$message.error(resp.data.message);
                         }
+                    }).catch((resp)=>{
+                        this.showMessage(resp);
                     });
                     //第二次ajax请求：回显所有检查项数据
                     axios.get("/checkitem/findAll.do").then((resp)=>{
@@ -403,6 +413,8 @@
                         } else {
                             this.$message.error(resp.data.message);
                         }
+                    }).catch((resp)=>{
+                        this.showMessage(resp);
                     });
                 },
                 //切换页码
@@ -425,6 +437,8 @@
                             } else {
                                 this.$message.error(resp.data.message);
                             }
+                        }).catch((resp)=>{
+                            this.showMessage(resp);
                         }).finally(()=>{
                             this.findPage();
                         })
@@ -432,7 +446,18 @@
                         this.$message("操作已取消")
                     })
 
-                }
+                },
+                //权限不足提示
+                showMessage(resp){
+                    if(resp == 'Error: Request failed with status code 403'){
+                        //权限不足
+                        this.$message.error('无访问权限');
+                        return;
+                    }else{
+                        this.$message.error('未知错误');
+                        return;
+                    }
+                },
             }
         })
     </script>

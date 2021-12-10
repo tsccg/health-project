@@ -11,6 +11,7 @@ import com.tsccg.pojo.Role;
 import com.tsccg.pojo.User;
 import com.tsccg.service.MenuService;
 import com.tsccg.service.UserService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -102,6 +103,7 @@ public class MenuController {
      * @param menu
      * @return
      */
+    @PreAuthorize("hasAuthority('MENU_ADD')")
     @RequestMapping("/add")
     public Result add(@RequestBody Menu menu) {
 //        System.out.println("上级菜单id：" + menu.getParentMenuId());
@@ -117,6 +119,7 @@ public class MenuController {
      * @param queryPageBean
      * @return
      */
+    @PreAuthorize("hasAuthority('MENU_QUERY')")
     @RequestMapping("/findPage")
     public PageResult findPage(@RequestBody QueryPageBean queryPageBean) {
         PageResult pageResult = null;
@@ -133,6 +136,7 @@ public class MenuController {
      * @param id 菜单id
      * @return 执行结果
      */
+    @PreAuthorize("hasAuthority('MENU_DELETE')")
     @RequestMapping("/delete")
     public Result delete(Integer id) {
         try {
@@ -149,6 +153,7 @@ public class MenuController {
      * @param id
      * @return
      */
+    @PreAuthorize("hasAuthority('MENU_QUERY')")
     @RequestMapping("/findById")
     public Result findById(Integer id) {
         try {
@@ -165,6 +170,7 @@ public class MenuController {
      * @param menu
      * @return
      */
+    @PreAuthorize("hasAuthority('MENU_EDIT')")
     @RequestMapping("/edit")
     public Result edit(@RequestBody Menu menu) {
         try {

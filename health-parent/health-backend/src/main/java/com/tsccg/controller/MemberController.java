@@ -33,6 +33,7 @@ public class MemberController {
      * @param queryPageBean
      * @return
      */
+    @PreAuthorize("hasAuthority('MEMBER_QUERY')")
     @RequestMapping("/findPage")
     public PageResult findPage(@RequestBody QueryPageBean queryPageBean){
         PageResult pageResult=null;
@@ -49,7 +50,7 @@ public class MemberController {
      * @param member 会员信息
      * @return 执行结果
      */
-//    @PreAuthorize("hasAuthority('MEMBER_ADD')")//权限校验
+    @PreAuthorize("hasAuthority('MEMBER_ADD')")//权限校验
     @RequestMapping("/add")
     public Result add(@RequestBody Member member) {//返回的表单数据是json格式，使用@RequestBody解析
         try {
@@ -70,6 +71,7 @@ public class MemberController {
      * @param id
      * @return
      */
+    @PreAuthorize("hasAuthority('MEMBER_DELETE')")
     @RequestMapping("/delete")
 //    @PreAuthorize("hasAuthority('MEMBER_DELETE')")
     public Result delete(Integer id) {
@@ -86,6 +88,7 @@ public class MemberController {
      * @param id
      * @return
      */
+    @PreAuthorize("hasAuthority('MEMBER_QUERY')")
     @RequestMapping("/findById")
     public Result findById(Integer id) {
         try {
@@ -102,6 +105,7 @@ public class MemberController {
      * @param member 待更新会员信息
      * @return 执行结果
      */
+    @PreAuthorize("hasAuthority('MEMBER_EDIT')")
     @RequestMapping("/edit")
     public Result edit(@RequestBody Member member) {
         try {

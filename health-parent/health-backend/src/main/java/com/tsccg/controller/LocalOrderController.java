@@ -9,6 +9,7 @@ import com.tsccg.pojo.Order;
 import com.tsccg.service.OrderService;
 import com.tsccg.utils.SMSTXUtils;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +33,7 @@ public class LocalOrderController {
      * @param setmealId 当前预约对应的套餐id
      * @return 执行结果
      */
+    @PreAuthorize("hasAuthority('ORDER_ADD')")
     @RequestMapping("/submit")
     public Result submit(@RequestBody Map<String,String> map,Integer setmealId) {
 //        System.out.println("map" + map);
@@ -84,6 +86,7 @@ public class LocalOrderController {
      * @param queryPageBean 1.当前页码、2.每页记录数、3.查询条件
      * @return 1.total:总记录数。2.rows:当前页结果
      */
+    @PreAuthorize("hasAuthority('ORDER_QUERY')")
     @RequestMapping("/findOrdersPage")
     public PageResult findOrdersPage(@RequestBody QueryPageBean queryPageBean) {
         return orderService.findOrdersPage(queryPageBean);
@@ -92,6 +95,7 @@ public class LocalOrderController {
      * 修改预约状态
      * @param map 1.预约id 2.要修改的预约状态：未到诊 ；已到诊
      */
+    @PreAuthorize("hasAuthority('ORDER_EDIT')")
     @RequestMapping("/orderStatusSwitch")
     public Result orderStatusSwitch(@RequestBody Map<String,String> map) {
 //        System.out.println(map.get("id"));
@@ -110,6 +114,7 @@ public class LocalOrderController {
      * @param id 预约记录id
      * @return 执行结果
      */
+    @PreAuthorize("hasAuthority('ORDER_DELETE')")
     @RequestMapping("/deleteOrderById")
     public Result deleteOrderById(Integer id) {
         try {
@@ -127,6 +132,7 @@ public class LocalOrderController {
      * @return 预约基本信息
      * 1.name 2.telephone 3.orderDate 4.birthday 5.sex 6.age 7.idCard
      */
+    @PreAuthorize("hasAuthority('ORDER_QUERY')")
     @RequestMapping("/findById")
     public Result findById(Integer id) {
         try {
@@ -143,6 +149,7 @@ public class LocalOrderController {
      * @param id 预约id
      * @return 套餐id
      */
+    @PreAuthorize("hasAuthority('ORDER_QUERY')")
     @RequestMapping("/findSetmealId")
     public Result findSetmealId(Integer id) {
         try {
@@ -160,6 +167,7 @@ public class LocalOrderController {
      * @param setmealId 修改后的套餐id
      * @return 执行结果
      */
+    @PreAuthorize("hasAuthority('ORDER_EDIT')")
     @RequestMapping("/editOrder")
     public Result editOrder(@RequestBody Map<String,String> map,Integer setmealId) {
         Result result = null;

@@ -19,8 +19,15 @@ public interface RoleDao {
     Set<Role> findByUserId(Integer userId);
 
     /**
-     * 根据角色id关联菜单
+     * 为角色关联菜单
      * @param map role_id:角色id;menu_id:菜单id
      */
-    void addMenuById(Map<String,Integer> map);
+    void addMenu(Map<String,Integer> map);
+
+    /**
+     * 为角色关联权限
+     * @param map role_id:角色id;permission_id:权限id
+     */
+    void addPermission(Map<String, Integer> map);
+
 }

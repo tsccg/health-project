@@ -31,7 +31,7 @@ public class OrderSettingController {
      * @param excelFile 预约设置文件
      * @return 执行结果
      */
-    @PreAuthorize("hasAuthority('ORDERSETTING')")
+    @PreAuthorize("hasAuthority('ORDERSETTING_ADD')")
     @RequestMapping("upload")
     public Result upload(@RequestParam MultipartFile excelFile) {
         try {
@@ -60,7 +60,7 @@ public class OrderSettingController {
      * @param date 查询条件：2021-11 yyyy-MM
      * @return 预约设置信息
      */
-    @PreAuthorize("hasAuthority('ORDERSETTING')")
+    @PreAuthorize("hasAuthority('ORDERSETTING_QUERY')")
     @RequestMapping("/getOrderSettingByMonth")
     public Result getOrderSettingByMonth(String date) {
         try {
@@ -86,7 +86,7 @@ public class OrderSettingController {
      * @param orderSetting 日期；可预约人数
      * @return 执行结果
      */
-    @PreAuthorize("hasAuthority('ORDERSETTING')")
+    @PreAuthorize("hasAuthority('ORDERSETTING_EDIT')")
     @RequestMapping("/editNumberByDate")
     public Result editNumberByDate(@RequestBody OrderSetting orderSetting){
         try {

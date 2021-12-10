@@ -15,7 +15,7 @@
     <!-- 引入组件库 -->
     <script type="text/javascript" src="../js/jquery.min.js"></script>
     <script src="../js/vue.js"></script>
-    <script src="../plugins/elementui/index(1).js"></script>
+    <script src="../plugins/elementui/index.js"></script>
     <script src="../js/axios-0.18.0.js"></script>
     <style>
         .datatable {
@@ -45,47 +45,41 @@
 <body class="hold-transition">
 <div id="app">
     <div class="content-header">
-        <h1>系统设置<small>菜单管理</small></h1>
+        <h1>权限管理<small>用户权限管理</small></h1>
         <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>系统设置</el-breadcrumb-item>
-            <el-breadcrumb-item>菜单管理</el-breadcrumb-item>
+            <el-breadcrumb-item>权限管理</el-breadcrumb-item>
+            <el-breadcrumb-item>用户权限管理</el-breadcrumb-item>
         </el-breadcrumb>
     </div>
     <div class="app-container">
         <div class="box">
             <div class="filter-container">
-                <el-input placeholder="菜单名称" v-model="pagination.queryString" style="width: 200px;"
+                <el-input placeholder="权限名称" v-model="pagination.queryString" style="width: 200px;"
                           class="filter-item" @keyup.enter.native="handleFilter"></el-input>
                 <el-button @click="_findPage()" class="dalfBut">查询</el-button>
                 <el-button type="primary" class="butT" @click="handleCreate()">新建</el-button>
             </div>
-            <el-table
-                    :data="dataList"
-                    style="width: 100%;margin-bottom: 20px;"
-                    row-key="id"
-                    border
-                    :tree-props="{children: 'children'}">
-                <el-table-column width=50% align="center" sortable></el-table-column>
-                <el-table-column prop="icon" align="center" sortable label="图标">
+            <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
+                <!--<el-table-column type="selection" width="55"></el-table-column>-->
+                <el-table-column type="index" align="center" label="序号"></el-table-column>
+                <el-table-column prop="name" align="center" label="权限名称"></el-table-column>
+                <el-table-column prop="keyword" label="关键字" align="center"></el-table-column>
+                <el-table-column prop="description" label="描述" align="center"></el-table-column>
+                <el-table-column prop="enable" label="是否启用" align="center">
                     <template slot-scope="scope">
-                        <i class="fa" :class="scope.row.icon"></i>
+                        <!--<span>{{ scope.row.enable == '0' ? '否' : '是'}}</span>-->
+                        <el-switch
+                                active-text="是"
+                                inactive-text="否"
+                                v-model="scope.row.enable === 1"
+                                active-color="#13ce66"
+                                inactive-color="#ff4949"
+                                @change="enableSwitch(scope.row)">
+                        </el-switch>
                     </template>
                 </el-table-column>
-                <el-table-column prop="name" align="center" sortable label="菜单名称"></el-table-column>
-                <el-table-column prop="path" label="路径级别" sortable align="center"></el-table-column>
-                <el-table-column prop="linkUrl" label="访问路径" sortable align="center" width="200px"></el-table-column>
-                <el-table-column prop="priority" label="优先级别" sortable align="center"></el-table-column>
-                <el-table-column prop="parentMenuId" label="上级菜单" sortable align="center">
-                    <template slot-scope="scope">
-                        <span v-for="item in parentMenus" v-if="item.id==scope.row.parentMenuId">
-                            {{item.name}}
-                        </span>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="level" label="菜单级别" sortable align="center"></el-table-column>
-                <el-table-column prop="description" label="描述" sortable align="center"></el-table-column>
-                <el-table-column label="操作" sortable align="center" width="200px">
+                <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
                         <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
@@ -94,7 +88,7 @@
             </el-table>
             <div class="pagination-container">
                 <el-pagination
-                        class="pagination"
+                        class="pagiantion"
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
                         :current-page="pagination.currentPage"
@@ -106,62 +100,38 @@
             </div>
             <!-- 新增标签弹层 -->
             <div class="add-form">
-                <el-dialog title="新增菜单项" :visible.sync="dialogFormVisible">
+                <el-dialog title="新增权限" :visible.sync="dialogFormVisible">
                     <el-form ref="dataAddForm" :model="formData" :rules="rules" label-position="right"
                              label-width="100px">
                         <el-row>
                             <el-col :span="12">
-                                <el-form-item label="菜单名称" prop="name">
+                                <el-form-item label="权限名称" prop="name">
                                     <el-input v-model="formData.name"/>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="12">
-                                <el-form-item label="访问路径" prop="linkUrl">
-                                    <el-input v-model="formData.linkUrl"/>
+                                <el-form-item label="关键字" prop="keyword">
+                                    <el-input v-model="formData.keyword"/>
                                 </el-form-item>
                             </el-col>
                         </el-row>
-                        <!--<el-row>
-                            <el-col :span="12">
-                                <el-form-item label="路径级别" prop="path">
-                                    <el-input v-model="formData.path"/>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-form-item label="优先级" prop="priority">
-                                    <el-input v-model="formData.priority"/>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>-->
                         <el-row>
                             <el-col :span="12">
-                                <el-form-item label="上级菜单" prop="parentMenuId">
-                                    <el-select
-                                            v-model="formData.parentMenuId"
-                                            placeholder="请选择上级菜单"
-                                            clearable>
-                                        <el-option
-                                                v-for="item in parentMenus"
-                                                :label="item.name"
-                                                :value="item.id">
+                                <el-form-item label="是否启用" prop="enable">
+                                    <el-select v-model="formData.enable">
+                                        <!--<el-option label="是" value="1"></el-option>
+                                        <el-option label="否" value="0"></el-option>-->
+                                        <el-option  v-for="item in enables"
+                                                    :label="item.key"
+                                                    :value="item.value">
                                         </el-option>
                                     </el-select>
-                                </el-form-item>
-                            </el-col>
-<!--                            <el-col :span="12">-->
-<!--                                <el-form-item label="菜单级别" prop="level">-->
-<!--                                    <el-input v-model="formData.level"/>-->
-<!--                                </el-form-item>-->
-<!--                            </el-col>-->
-                            <el-col :span="12">
-                                <el-form-item label="图标">
-                                    <el-input v-model="formData.icon" type="text"></el-input>
                                 </el-form-item>
                             </el-col>
                         </el-row>
                         <el-row>
                             <el-col :span="24">
-                                <el-form-item label="描述">
+                                <el-form-item label="权限说明">
                                     <el-input v-model="formData.description" type="textarea"></el-input>
                                 </el-form-item>
                             </el-col>
@@ -176,64 +146,38 @@
 
             <!-- 编辑标签弹层 -->
             <div class="edit-form">
-                <el-dialog title="新增菜单项" :visible.sync="dialogFormVisible4Edit">
+                <el-dialog title="编辑权限" :visible.sync="dialogFormVisible4Edit">
                     <el-form ref="dataEditForm" :model="formData" :rules="rules" label-position="right"
                              label-width="100px">
                         <el-row>
                             <el-col :span="12">
-                                <el-form-item label="菜单名称" prop="name">
+                                <el-form-item label="权限名称" prop="name">
                                     <el-input v-model="formData.name"/>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="12">
-                                <el-form-item label="访问路径" prop="linkUrl">
-                                    <el-input v-model="formData.linkUrl"/>
+                                <el-form-item label="关键字" prop="keyword">
+                                    <el-input v-model="formData.keyword"/>
                                 </el-form-item>
                             </el-col>
                         </el-row>
                         <el-row>
                             <el-col :span="12">
-                                <el-form-item label="路径级别" prop="path">
-                                    <el-input v-model="formData.path"/>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-form-item label="优先级" prop="priority">
-                                    <el-input v-model="formData.priority"/>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="上级菜单" prop="parentMenuId">
-                                    <el-select
-                                            v-model="formData.parentMenuId"
-                                            placeholder="请选择上级菜单"
-                                            clearable>
-                                        <el-option
-                                                v-for="item in parentMenus"
-                                                :label="item.name"
-                                                :value="item.id"
-                                                :key="item.id"
-                                                :disabled="item.id == formData.id">
+                                <el-form-item label="是否启用" prop="enable">
+                                    <el-select v-model="formData.enable">
+                                        <!--<el-option label="是" value="1"></el-option>
+                                        <el-option label="否" value="0"></el-option>-->
+                                        <el-option  v-for="item in enables"
+                                                    :label="item.key"
+                                                    :value="item.value">
                                         </el-option>
                                     </el-select>
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="12">
-                                <el-form-item label="图标">
-                                    <el-input v-model="formData.icon" type="text"></el-input>
-                                </el-form-item>
-                            </el-col>
-                            <!--<el-col :span="12">
-                                <el-form-item label="菜单级别" prop="level">
-                                    <el-input v-model="formData.level"/>
-                                </el-form-item>
-                            </el-col>-->
                         </el-row>
                         <el-row>
                             <el-col :span="24">
-                                <el-form-item label="描述">
+                                <el-form-item label="权限类型说明">
                                     <el-input v-model="formData.description" type="textarea"></el-input>
                                 </el-form-item>
                             </el-col>
@@ -263,88 +207,33 @@
             },
             dataList: [],//列表数据
             formData: {},//表单数据
+            tableData: [],//新增和编辑表单中对应的检查项列表数据
             dialogFormVisible: false,//控制添加窗口显示/隐藏
             dialogFormVisible4Edit: false,//控制编辑窗口显示/隐藏
             rules: {//校验规则
-                // linkUrl: [{required: true, message: '访问路径为必填项', trigger: 'blur'}],
-                name: [{required: true, message: '菜单名称为必填项', trigger: 'blur'}],
-                path: [{required: true, message: '路径级别为必填项', trigger: 'blur'}],
-                priority: [{required: true, message: '优先级为必填项', trigger: 'blur'}],
-                // parentMenuId: [{required: true, message: '上级菜单为必填项', trigger: 'blur'}],
-                // level: [{required: true, message: '菜单级别为必填项', trigger: 'blur'}]
+                keyword: [{required: true, message: '关键字为必填项', trigger: 'blur'}],
+                name: [{required: true, message: '权限名称为必填项', trigger: 'blur'}],
+                enable: [{required: true, message: '是否启用为必填项', trigger: 'blur'}]
             },
-            parentMenus:[]
+            enables:[{'key':'是','value':1},{'key':'否','value':0}]
         },
         created() {
             this.findPage();
-
         },
         methods: {
-            //获取所有顶级菜单
-            findAllParentMenu() {
-                //发起ajax请求，回显到下拉列表上
-                axios.get("/menu/findAllParentMenu.do").then((resp)=>{
-                    if (resp.data.flag) {
-                        this.parentMenus = resp.data.data;
-                    } else {
-                        this.$message.error(resp.data.message);
-                    }
-                }).catch((resp)=>{
-                    this.showMessage(resp);
-                });
-            },
             // 弹出添加窗口
             handleCreate() {
+                this.dialogFormVisible = true;
                 this.resetForm();
-                this.dialogFormVisible=true;
             },
             //添加
             handleAdd() {
                 this.$refs["dataAddForm"].validate(result => {
                     if (result) {
-                        axios.post("/menu/add.do", this.formData).then(res => {
-                            if (res.data.flag) {
-                                this.$message.success(res.data.message);
-                                this.dialogFormVisible = false;
-                            } else {
-                                this.$message.error(res.data.message);
-                            }
-                        }).catch((resp)=>{
-                            this.showMessage(resp);
-                        }).finally(() => {
-                            this.findPage();
-                        })
-                    } else {
-                        this.$message({
-                            showClose: true,
-                            message: '菜单名称和访问路径不能为空!',
-                            type: 'warning'
-                        });
-                    }
-                });
-            },
-            // 弹出编辑窗口
-            handleUpdate(row) {
-                this.dialogFormVisible4Edit = true;
-                //回显菜单数据
-                axios.get("/menu/findById.do?id=" + row.id).then((resp) => {
-                    if (resp.data.flag) {
-                        this.formData=resp.data.data;
-                    } else {
-                        this.$message.error(resp.data.message);
-                    }
-                }).catch((resp)=>{
-                    this.showMessage(resp);
-                });
-            },
-            //编辑
-            handleEdit() {
-                this.$refs["dataEditForm"].validate((result) => {
-                    if (result) {
-                        axios.post("/menu/edit.do", this.formData).then(resp => {
+                        axios.post("/permission/add.do", this.formData).then((resp) => {
                             if (resp.data.flag) {
                                 this.$message.success(resp.data.message);
-                                this.dialogFormVisible4Edit = false;
+                                this.dialogFormVisible = false;
                             } else {
                                 this.$message.error(resp.data.message);
                             }
@@ -352,11 +241,39 @@
                             this.showMessage(resp);
                         }).finally(() => {
                             this.findPage();
-                        })
+                        });
                     }
                 });
             },
-
+            // 弹出编辑窗口
+            handleUpdate(row) {
+                this.dialogFormVisible4Edit = true;
+                //发送ajax请求，获取当前权限项数据，渲染到页面上
+                axios.get("/permission/findById.do?id=" + row.id).then((resp) => {
+                    this.formData=resp.data.data;
+                }).catch((resp)=>{
+                    this.showMessage(resp);
+                });
+            },
+            //编辑
+            handleEdit() {
+                this.$refs["dataEditForm"].validate(result => {
+                    if (result) {
+                        axios.post("/permission/edit.do", this.formData).then(res => {
+                            if (res.data.flag) {
+                                this.$message.success(res.data.message);
+                                this.dialogFormVisible4Edit = false;
+                            } else {
+                                this.$message.error(res.data.message);
+                            }
+                        }).catch((resp)=>{
+                            this.showMessage(resp);
+                        }).finally(() => {
+                            this.findPage();
+                        });
+                    }
+                });
+            },
             //分页查询
             findPage() {
                 //将查询条件封装成json对象
@@ -365,13 +282,11 @@
                     pageSize: this.pagination.pageSize,
                     queryString: this.pagination.queryString
                 };
-                axios.post("/menu/findPage.do", param).then((res) => {
-                    this.dataList = res.data.rows;
-                    this.pagination.total = res.data.total;
+                axios.post("/permission/findPage.do", param).then((resp) => {
+                    this.dataList = resp.data.rows;
+                    this.pagination.total = resp.data.total;
                 }).catch((resp)=>{
                     this.showMessage(resp);
-                }).finally(()=>{
-                    this.findAllParentMenu();
                 });
             },
             //条件查询
@@ -379,10 +294,25 @@
                 this.pagination.currentPage = 1;
                 this.findPage();
             },
-            // 重置表单
-            resetForm() {
-                //重置输入框中的数据
-                this.formData = {};
+            //切换启用状态
+            enableSwitch(row){
+                //alert(row.enable);
+                var newEnable = row.enable === 0 ? 1 : 0;
+                //alert(newEnable);
+                axios.get("/permission/switchEnable.do?id="+row.id+"&enable="+newEnable).then((resp)=>{
+                    if(resp.data.flag) {
+                        this.$message({
+                            type:'success',
+                            message:resp.data.message
+                        });
+                    } else {
+                        this.$message.error(resp.data.message);
+                    }
+                }).catch((resp)=>{
+                    this.showMessage(resp);
+                }).finally(()=>{
+                    this.findPage();
+                });
             },
             //切换页码
             handleCurrentChange(currentPage) {
@@ -396,19 +326,19 @@
             },
             // 删除
             handleDelete(row) {
-                this.$confirm('此操作将永久删除当前菜单及其子菜单, 是否继续?', '提示', {
+                this.$confirm('此操作将永久删除当前数据, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    axios.get("/menu/delete.do?id=" + row.id).then(res => {
-                        if (res.data.flag) {
+                    axios.get("/permission/delete.do?id=" + row.id).then((resp) => {
+                        if (resp.data.flag) {
                             this.$message({
                                 type: 'success',
-                                message: res.data.message
+                                message: resp.data.message
                             });
                         } else {
-                            this.$message.error(res.data.message);
+                            this.$message.error(resp.data.message);
                         }
                     }).catch((resp)=>{
                         this.showMessage(resp);
@@ -419,13 +349,20 @@
                 }).catch(() => {
                     this.$message({
                         type: 'info',
-                        message: '已取消操作'
+                        message: '已取消删除'
                     });
                 });
             },
-            //权限提示
-            showMessage(r){
-                if(r == 'Error: Request failed with status code 403'){
+            // 重置表单
+            resetForm() {
+                //重置输入框中的数据
+                this.formData = {};
+                this.tableData = [];
+                this.activeName = "first";
+            },
+            //权限不足提示
+            showMessage(resp){
+                if(resp == 'Error: Request failed with status code 403'){
                     //权限不足
                     this.$message.error('无访问权限');
                     return;

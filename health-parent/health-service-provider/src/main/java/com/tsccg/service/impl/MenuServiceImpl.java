@@ -6,17 +6,13 @@ import com.github.pagehelper.PageHelper;
 import com.tsccg.constant.MessageConstant;
 import com.tsccg.dao.MenuDao;
 import com.tsccg.dao.RoleDao;
-import com.tsccg.dao.UserDao;
 import com.tsccg.entity.PageResult;
 import com.tsccg.entity.QueryPageBean;
 import com.tsccg.entity.Result;
 import com.tsccg.pojo.Menu;
-import com.tsccg.pojo.Role;
-import com.tsccg.pojo.User;
 import com.tsccg.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.*;
 
@@ -90,7 +86,7 @@ public class MenuServiceImpl implements MenuService{
         Map<String,Integer> map = new HashMap<>();
         map.put("role_id",1);
         map.put("menu_id",menu.getId());
-        roleDao.addMenuById(map);
+        roleDao.addMenu(map);
         return new Result(true,MessageConstant.ADD_MENU_SUCCESS);
     }
 
