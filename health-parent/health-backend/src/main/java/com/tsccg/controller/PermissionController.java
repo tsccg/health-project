@@ -126,8 +126,8 @@ public class PermissionController {
             return new Result(true,MessageConstant.EDIT_PERMISSION_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
-            if (e.getMessage().equals(MessageConstant.PERMISSION_KEYWORD_NON_REPEATABLE)) {
-                return new Result(false,MessageConstant.PERMISSION_KEYWORD_NON_REPEATABLE);
+            if (e.getMessage().equals(MessageConstant.KEYWORD_CANNOT_BE_REPEATED)) {
+                return new Result(false,MessageConstant.KEYWORD_CANNOT_BE_REPEATED);
             }
             return new Result(false,MessageConstant.EDIT_PERMISSION_FAIL);
         }

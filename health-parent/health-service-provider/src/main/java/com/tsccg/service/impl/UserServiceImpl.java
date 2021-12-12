@@ -13,10 +13,7 @@ import com.tsccg.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @Author: TSCCG
@@ -65,8 +62,11 @@ public class UserServiceImpl implements UserService{
                 LinkedHashSet<Menu> menus = menuDao.findParentMenuByRoleId(roleId);
                 if (menus != null && menus.size() > 0) {
                     for (Menu parentMenu : menus) {
-                        //根据顶级菜单id查询对应的子菜单列表
-                        List<Menu> childrenMenuList = menuDao.findChildrenMenuByParentId(parentMenu.getId());
+                        //根据当前一级菜单id和角色id查询对应的子菜单列表
+                        Map<String,Integer> map = new HashMap<>();
+                        map.put("parentMenuId",parentMenu.getId());
+                        map.put("role_id",roleId);
+                        List<Menu> childrenMenuList = menuDao.findChildrenMenuByParentIdAndRoleId(map);
                         if (childrenMenuList != null && childrenMenuList.size() > 0) {
                             //将子菜单列表填入当前顶级菜单实体类属性里
                             parentMenu.setChildren(childrenMenuList);

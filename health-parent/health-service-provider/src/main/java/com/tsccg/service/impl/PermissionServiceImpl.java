@@ -40,7 +40,7 @@ public class PermissionServiceImpl implements PermissionService {
         if (keyword != null) {
             Integer keywordCount = permissionDao.findKeyWordCount(keyword);
             if (keywordCount > 0) {
-                return new Result(false,MessageConstant.PERMISSION_KEYWORD_NON_REPEATABLE);
+                return new Result(false,MessageConstant.KEYWORD_CANNOT_BE_REPEATED);
             }
         }
         //2.添加权限到权限表
@@ -80,7 +80,7 @@ public class PermissionServiceImpl implements PermissionService {
         //不能直接删除，需要检查当前权限项是否与角色关联，如果关联则不能删除
         long count = permissionDao.findRoleCountByPermissionId(id);
         if(count > 0) {
-            return new Result(false, MessageConstant.PERMISSION_HAVE_CONNECTION);
+            return new Result(false, MessageConstant.HAVE_CONNECTION);
         }
         permissionDao.deleteById(id);
         return new Result(true, MessageConstant.DELETE_PERMISSION_SUCCESS);
@@ -105,7 +105,7 @@ public class PermissionServiceImpl implements PermissionService {
         //更新之后检查数据库中的关键字数量
         Integer keywordCount = permissionDao.findKeyWordCount(permission.getKeyword());
         if (keywordCount > 1) {
-            throw new RuntimeException(MessageConstant.PERMISSION_KEYWORD_NON_REPEATABLE);
+            throw new RuntimeException(MessageConstant.KEYWORD_CANNOT_BE_REPEATED);
         }
     }
 }

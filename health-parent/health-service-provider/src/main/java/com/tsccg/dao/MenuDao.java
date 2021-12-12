@@ -5,6 +5,7 @@ import com.tsccg.pojo.Menu;
 
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: TSCCG
@@ -85,4 +86,11 @@ public interface MenuDao {
      * @param menu
      */
     void update(Menu menu);
+
+    /**
+     * 根据当前一级菜单id和角色id查询对应的子菜单列表
+     * @param map parentMenuId   role_id
+     * @return
+     */
+    List<Menu> findChildrenMenuByParentIdAndRoleId(Map<String, Integer> map);
 }

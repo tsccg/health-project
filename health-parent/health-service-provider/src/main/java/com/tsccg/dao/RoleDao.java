@@ -1,5 +1,6 @@
 package com.tsccg.dao;
 
+import com.github.pagehelper.Page;
 import com.tsccg.pojo.Role;
 
 import java.util.List;
@@ -30,4 +31,75 @@ public interface RoleDao {
      */
     void addPermission(Map<String, Integer> map);
 
+    /**
+     * 根据关键字查询角色
+     * @param keyword
+     * @return
+     */
+    Role findByKeyword(String keyword);
+
+    /**
+     * 添加角色
+     */
+    void add(Role role);
+
+    /**
+     * 分页查询
+     * @param queryString
+     * @return
+     */
+    Page<Role> findByCondition(String queryString);
+
+    /**
+     * 根据角色id查询关联数据
+     * @param roleId 角色id
+     * @return
+     */
+    Integer findConnection(Integer roleId);
+
+    /**
+     * 根据id删除角色
+     * @param id
+     */
+    void deleteById(Integer id);
+
+    /**
+     * 清除菜单关联
+     * @param id
+     */
+    void deleteMenus(Integer id);
+
+    /**
+     * 清除权限关联
+     * @param id
+     */
+    void deletePermissions(Integer id);
+
+    /**
+     * 根据id查询角色信息
+     * @param id
+     * @return
+     */
+    Role findById(Integer id);
+    /**
+     * 根据id查询所关联的权限id列表
+     */
+    List<Integer> findPermissionIdsById(Integer id);
+    /**
+     * 根据id查询所关联的菜单id列表
+     */
+    List<Integer> findMenuIdsById(Integer id);
+
+    /**
+     * 编辑角色信息
+     * @param role
+     */
+    void edit(Role role);
+
+    /**
+     * 根据关键字查询角色记录数量
+     * @param keyword
+     * @return
+     */
+    Integer findRoleCountByKeyword(String keyword);
 }

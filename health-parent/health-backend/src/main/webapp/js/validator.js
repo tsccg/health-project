@@ -18,3 +18,12 @@ var validatorIdCard = function(rule, value, callback) {
         callback()
     }
 }
+//判断数组中是否包含某一元素
+var isInArray = function(arr,value){
+    for(var i = 0; i < arr.length; i++){
+        if(value === arr[i]){
+            return true;
+        }
+    }
+    return false;
+}

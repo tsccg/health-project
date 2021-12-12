@@ -96,7 +96,7 @@ public class MessageConstant {
     public static final String ADD_PERMISSION_FAIL = "新增权限项失败";
     public static final String DELETE_PERMISSION_SUCCESS = "删除权限项成功";
     public static final String DELETE_PERMISSION_FAIL = "删除权限项失败";
-    public static final String PERMISSION_HAVE_CONNECTION = "当前权限被引用，不能删除";
+    public static final String HAVE_CONNECTION = "当前记录被引用，不能删除";
     public static final String EDIT_PERMISSION_SUCCESS = "编辑权限项成功";
     public static final String EDIT_PERMISSION_FAIL = "编辑权限项失败";
     public static final String PERMISSION_ENABLE_HAS_OPEN = "权限项已启用";
@@ -106,5 +106,16 @@ public class MessageConstant {
     public static final String QUERY_PERMISSION_FAIL = "查询权限项失败";
     public static final String QUERY_PERMISSION_LIST_SUCCESS = "查询权限列表数据成功";
     public static final String QUERY_PERMISSION_LIST_FAIL = "查询权限列表数据失败";
-    public static final String PERMISSION_KEYWORD_NON_REPEATABLE = "已存在该权限项关键字";
+    public static final String KEYWORD_CANNOT_BE_REPEATED = "关键字不可重复";
+    public static final String ADD_ROLE_SUCCESS = "新增角色成功";
+    public static final String ADD_ROLE_FAIL = "新增角色失败";
+    public static final String DELETE_ROLE_SUCCESS = "删除角色成功";
+    public static final String DELETE_ROLE_FAIL = "删除角色失败";
+    public static final String EDIT_ROLE_SUCCESS = "编辑角色成功";
+    public static final String EDIT_ROLE_FAIL = "编辑角色失败";
+    public static final String QUERY_ROLE_SUCCESS = "查询角色成功";
+    public static final String QUERY_ROLE_FAIL = "查询角色失败";
+
+    
+   
 }
