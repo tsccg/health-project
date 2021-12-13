@@ -4,6 +4,7 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.tsccg.pojo.Permission;
 import com.tsccg.pojo.Role;
 import com.tsccg.pojo.User;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,11 +34,18 @@ public class SpringSecurityUserService implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        System.out.println("用户名"+username);
         //1.根据用户名查询用户信息，返回一个我们自己写的User实体类对象
         User user = userService.findByName(username);
-        if (user == null) {
+        /*if (user == null) {
             //用户名为空，阻止登录
             return null;
+        }*/
+        if(user == null){
+            //用户名不存在
+            throw new UsernameNotFoundException("此用户不存在");
+        } else if(!"1".equals(user.getStation())){
+            throw  new DisabledException("此用户状态为关闭");
         }
         //2.为当前用户授权
         List<GrantedAuthority> list = new ArrayList<>();

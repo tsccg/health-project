@@ -8,4 +8,81 @@
         select id,birthday,gender,username,password,remark,station,telephone
         from t_user where username = #{username}
     </select>
+    <!--根据用户名查询用户数量-->
+    <select id="findUserCountByUsername" parameterType="string" resultType="int">
+        select count(*)
+        from t_user where username = #{username}
+    </select>
+    <!---->
+    <!--添加用户-->
+    <insert id="add" parameterType="com.tsccg.pojo.User">
+        insert into
+        t_user(birthday,gender,username,password,remark,station,telephone)
+        values(#{birthday},#{gender},#{username},#{password},#{remark},#{station},#{telephone})
+        <!--回显刚插入的id-->
+        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+    <!--为用户关联角色-->
+    <insert id="addRole" parameterType="map">
+        insert into t_user_role(user_id,role_id) values(#{user_id},#{role_id})
+    </insert>
+    <!--分页查询-->
+    <select id="findPage" parameterType="string" resultType="com.tsccg.pojo.User">
+        select id,birthday,gender,username,password,remark,station,telephone
+        from t_user
+        <where>
+            <if test="value != null and value.length > 0">
+                username = #{value} or telephone = #{value}
+            </if>
+        </where>
+    </select>
+    <!--根据用户id查询用户基本信息-->
+    <select id="findById" parameterType="int" resultType="com.tsccg.pojo.User">
+        select id,birthday,gender,username,password,remark,station,telephone
+        from t_user where id = #{id}
+    </select>
+    <!--查询用户关联的所有角色id-->
+    <select id="findRoleIds" parameterType="int" resultType="int">
+        select role_id from t_user_role
+        where user_id = #{user_id}
+    </select>
+    <!--编辑用户信息-->
+    <update id="edit" parameterType="com.tsccg.pojo.User">
+        update t_user
+        <set>
+            <if test="username != null and username.length > 0">
+                username = #{username},
+            </if>
+            <if test="password != null and password.length > 0">
+                password = #{password},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday},
+            </if>
+            <if test="gender != null and gender.length > 0">
+                gender = #{gender},
+            </if>
+            <if test="remark != null and remark.length > 0">
+                remark = #{remark},
+            </if>
+            <if test="station != null and station.length > 0">
+                station = #{station},
+            </if>
+            <if test="telephone != null and telephone.length > 0">
+                telephone = #{telephone},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <!--根据用户id删除关联的角色-->
+    <delete id="deleteRoleByUserId" parameterType="int">
+        delete from t_user_role where user_id = #{user_id}
+    </delete>
+    <!--根据用户id删除用户-->
+    <delete id="deleteById" parameterType="int">
+        delete from t_user where id = #{id}
+    </delete>
+
 </mapper>

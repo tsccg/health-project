@@ -93,4 +93,11 @@ public interface MenuDao {
      * @return
      */
     List<Menu> findChildrenMenuByParentIdAndRoleId(Map<String, Integer> map);
+
+    /**
+     * 根据角色id查询关联的所有菜单项
+     * @param roleId
+     * @return
+     */
+    LinkedHashSet<Menu> findAllMenuByRoleId(Integer roleId);
 }

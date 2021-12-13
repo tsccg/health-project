@@ -99,9 +99,9 @@ public class MessageConstant {
     public static final String HAVE_CONNECTION = "当前记录被引用，不能删除";
     public static final String EDIT_PERMISSION_SUCCESS = "编辑权限项成功";
     public static final String EDIT_PERMISSION_FAIL = "编辑权限项失败";
-    public static final String PERMISSION_ENABLE_HAS_OPEN = "权限项已启用";
-    public static final String PERMISSION_ENABLE_HAS_CLOSE = "权限项已关闭";
-    public static final String EDIT_PERMISSION_ENABLE_FAIL = "权限项启用状态切换失败";
+    public static final String HAS_OPEN = "已启用";
+    public static final String HAS_CLOSE = "已关闭";
+    public static final String SWITCH_FAIL = "状态切换失败";
     public static final String QUERY_PERMISSION_SUCCESS = "查询权限项成功";
     public static final String QUERY_PERMISSION_FAIL = "查询权限项失败";
     public static final String QUERY_PERMISSION_LIST_SUCCESS = "查询权限列表数据成功";
@@ -115,6 +115,16 @@ public class MessageConstant {
     public static final String EDIT_ROLE_FAIL = "编辑角色失败";
     public static final String QUERY_ROLE_SUCCESS = "查询角色成功";
     public static final String QUERY_ROLE_FAIL = "查询角色失败";
+
+    public static final String QUERY_USER_SUCCESS = "查询用户成功";
+    public static final String QUERY_USER_FAIL = "查询用户失败";
+    public static final String ADD_USER_SUCCESS = "新增用户成功";
+    public static final String ADD_USER_FAIL = "新增用户失败";
+    public static final String DELETE_USER_SUCCESS = "删除用户成功";
+    public static final String DELETE_USER_FAIL = "删除用户失败";
+    public static final String EDIT_USER_SUCCESS = "编辑用户成功";
+    public static final String EDIT_USER_FAIL = "编辑用户失败";
+    public static final String USER_HAVE_EXISTS = "该用户已存在";
 
     
    

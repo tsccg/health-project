@@ -69,15 +69,15 @@ public class PermissionController {
         try {
             permissionService.updateById(new Permission(id,enable));
             if (enable == 0) {
-                return new Result(true,MessageConstant.PERMISSION_ENABLE_HAS_CLOSE);
+                return new Result(true,MessageConstant.HAS_CLOSE);
             } else if (enable == 1){
-                return new Result(true,MessageConstant.PERMISSION_ENABLE_HAS_OPEN);
+                return new Result(true,MessageConstant.HAS_OPEN);
             } else {
-                return new Result(false,MessageConstant.EDIT_PERMISSION_ENABLE_FAIL);
+                return new Result(false,MessageConstant.SWITCH_FAIL);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return new Result(false,MessageConstant.EDIT_PERMISSION_ENABLE_FAIL);
+            return new Result(false,MessageConstant.SWITCH_FAIL);
         }
     }
     /**

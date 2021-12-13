@@ -6,10 +6,13 @@ import com.github.pagehelper.PageHelper;
 import com.tsccg.constant.MessageConstant;
 import com.tsccg.dao.MenuDao;
 import com.tsccg.dao.RoleDao;
+import com.tsccg.dao.UserDao;
 import com.tsccg.entity.PageResult;
 import com.tsccg.entity.QueryPageBean;
 import com.tsccg.entity.Result;
 import com.tsccg.pojo.Menu;
+import com.tsccg.pojo.Role;
+import com.tsccg.pojo.User;
 import com.tsccg.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +30,8 @@ public class MenuServiceImpl implements MenuService{
     private MenuDao menuDao;
     @Autowired
     private RoleDao roleDao;
+    @Autowired
+    private UserDao userDao;
 
     /**
      * 获取所有顶级菜单
@@ -172,6 +177,64 @@ public class MenuServiceImpl implements MenuService{
          */
         menuDao.update(menu);
         return new Result(true,MessageConstant.EDIT_MENU_SUCCESS);
+    }
+
+    /**
+     * 根据用户名获取对应的菜单
+     * @param username
+     * @return
+     */
+    @Override
+    public LinkedHashSet<Menu> findMenuListByUserName(String username) {
+        /*
+            1.定义容器
+         */
+        //存放所有父菜单,使用set集合去重
+        LinkedHashSet<Menu> parentMenus = new LinkedHashSet<>();
+        //存放所有子菜单,使用set集合去重
+        LinkedHashSet<Menu> childMenus = new LinkedHashSet<>();
+        /*
+            2.获取数据
+         */
+        //根据用户名查询用户信息
+        User user = userDao.findByName(username);
+        if (user == null) {
+            return null;
+        }
+        //根据用户id获取关联的所有角色，并遍历
+        Set<Role> roles = roleDao.findRolesByUserId(user.getId());
+        if (roles != null && roles.size() > 0) {
+            for (Role role : roles) {
+                //根据角色id获取关联的所有菜单，并遍历
+                LinkedHashSet<Menu> menus = menuDao.findAllMenuByRoleId(role.getId());
+                for (Menu menu : menus) {
+                    if (menu.getParentMenuId() == null) {
+                        //若菜单为父菜单则添加到parentMenus集合中
+                        parentMenus.add(menu);
+                    } else {
+                        //若菜单为子菜单则添加到childMenus集合中
+                        childMenus.add(menu);
+                    }
+                }
+            }
+        }
+        /*
+            3.整理数据
+         */
+        //将所有子菜单添加进对应的父菜单中
+        for (Menu parentMenu : parentMenus) {
+            //存放当前父菜单对应的子菜单集合
+            List<Menu> children = new ArrayList<>();
+            //遍历所有子菜单
+            for (Menu childMenu : childMenus) {
+                if (childMenu.getParentMenuId().equals(parentMenu.getId())) {
+                    children.add(childMenu);
+                }
+            }
+            //将对应的子菜单添加到父菜单的属性中
+            parentMenu.setChildren(children);
+        }
+        return parentMenus;
     }
 
 }

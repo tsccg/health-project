@@ -2,6 +2,7 @@ package com.tsccg.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.github.pagehelper.Page;
+import com.sun.org.apache.bcel.internal.generic.IFNULL;
 import com.tsccg.constant.MessageConstant;
 import com.tsccg.entity.PageResult;
 import com.tsccg.entity.QueryPageBean;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.swing.event.MenuDragMouseEvent;
 import java.util.*;
 
 /**
@@ -34,7 +34,6 @@ public class MenuController {
 
     /**
      * 根据当前用户名获取对应的菜单列表
-     * @param username 当前用户名
      * @return 菜单列表，json数组
      *  [
      *     {
@@ -62,7 +61,7 @@ public class MenuController {
      *     }
      * ]
      */
-    @RequestMapping("/findMenuListByUserName")
+    /*@RequestMapping("/findMenuListByUserName")
     public Result findMenuListByUserName(String username) {
         try {
             List<Menu> menuList = new ArrayList<>();
@@ -75,6 +74,18 @@ public class MenuController {
                 LinkedHashSet<Menu> menus = role.getMenus();
                 menuList.addAll(menus);
             }
+            return new Result(true, MessageConstant.QUERY_MENU_LIST_SUCCESS,menuList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, MessageConstant.QUERY_MENU_LIST_FAIL);
+        }
+    }*/
+    @RequestMapping("/findMenuListByUserName")
+    public Result findMenuListByUserName(@RequestBody Map<String,String> map) {
+        String username = map.get("username");
+//        System.out.println(username);
+        try {
+            LinkedHashSet<Menu> menuList = menuService.findMenuListByUserName(username);
             return new Result(true, MessageConstant.QUERY_MENU_LIST_SUCCESS,menuList);
         } catch (Exception e) {
             e.printStackTrace();

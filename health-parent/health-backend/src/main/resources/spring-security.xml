@@ -42,6 +42,7 @@
         -->
         <!--只要认证通过就可以访问页面-->
         <security:intercept-url pattern="/pages/**" access="isAuthenticated()"/>
+        <!--        <security:intercept-url pattern="/pages/**"  access="hasAnyRole('ROLE_ADMIN','ROLE_HEALTH_MANAGER')" />-->
         <!--
             指定使用自己写的登录页面：
             form-login自定义表单登录信息

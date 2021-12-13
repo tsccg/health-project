@@ -3,6 +3,15 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tsccg.dao.MenuDao">
+    <!--根据角色id查询关联的所有菜单列表-->
+    <select id="findAllMenuByRoleId" parameterType="int" resultType="com.tsccg.pojo.Menu">
+        select m.id,m.name,m.linkUrl,m.priority,m.path,m.icon,m.description,m.parentMenuId,m.level
+        from t_role_menu rm
+        join t_menu m
+        on rm.menu_id = m.id
+        where rm.role_id = #{role_id}
+        order by m.priority
+    </select>
     <!--根据角色id查询关联的顶级菜单列表-->
     <select id="findParentMenuByRoleId" parameterType="int" resultType="com.tsccg.pojo.Menu">
         select m.id,m.name,m.linkUrl,m.priority,m.path,m.icon,m.description,m.parentMenuId,m.level

@@ -5,6 +5,7 @@ import com.tsccg.entity.QueryPageBean;
 import com.tsccg.entity.Result;
 import com.tsccg.pojo.Menu;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -51,4 +52,11 @@ public interface MenuService {
      * @return
      */
     Result edit(Menu menu);
+
+    /**
+     * 根据用户名获取对应的菜单
+     * @param username
+     * @return
+     */
+    LinkedHashSet<Menu> findMenuListByUserName(String username);
 }

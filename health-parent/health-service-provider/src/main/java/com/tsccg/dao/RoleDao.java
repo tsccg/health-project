@@ -17,7 +17,7 @@ public interface RoleDao {
      * @param userId 用户Id
      * @return 关联的角色，封装到Set集合中
      */
-    Set<Role> findByUserId(Integer userId);
+    Set<Role> findRolesByUserId(Integer userId);
 
     /**
      * 为角色关联菜单
@@ -102,4 +102,5 @@ public interface RoleDao {
      * @return
      */
     Integer findRoleCountByKeyword(String keyword);
+
 }
